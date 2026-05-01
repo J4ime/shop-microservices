@@ -1,0 +1,18 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+.vscode/
+launchSettings.json
+appsettings.*.local.json
+
+## Docker
+docker-compose.override.yml
+
+## IDE
+*.swp
+*~
+.idea/
+*.sln.iml
