@@ -1,10 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, LogOut, Package, Sun, Moon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const { isAuthenticated, user, logout } = useAuth();
   const { itemCount } = useCart();
   const { theme, toggle } = useTheme();
@@ -22,23 +25,25 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <Link to="/" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Tienda</Link>
+            <Link to="/" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">{t('nav.store')}</Link>
 
             {isAuthenticated ? (
               <>
                 <Link to="/orders" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-1">
-                  <Package size={16} /> Mis Pedidos
+                  <Package size={16} /> {t('nav.orders')}
                 </Link>
-                <span className="text-sm text-gray-400 dark:text-gray-500 hidden sm:inline">Hola, {user?.firstName}</span>
+                <span className="text-sm text-gray-400 dark:text-gray-500 hidden sm:inline">{t('nav.hello')}, {user?.firstName}</span>
                 <button onClick={logout} className="text-sm text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1">
-                  <LogOut size={16} /> Salir
+                  <LogOut size={16} /> {t('nav.logout')}
                 </button>
               </>
             ) : (
               <Link to="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-1">
-                <User size={16} /> Iniciar Sesión
+                <User size={16} /> {t('nav.login')}
               </Link>
             )}
+
+            <LanguageSwitcher />
 
             <button onClick={toggle} className="p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}>
               {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}

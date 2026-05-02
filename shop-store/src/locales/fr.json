@@ -1,0 +1,10 @@
+{
+  "nav": { "store": "Boutique", "cart": "Panier", "orders": "Mes Commandes", "login": "Connexion", "logout": "Déconnexion", "hello": "Salut" },
+  "home": { "hero": "Nouvelle Collection Printemps", "heroSub": "Découvrez les dernières tendances de la mode. Style, confort et qualité dans chaque vêtement.", "search": "Rechercher des produits...", "all": "Tous", "results": "{{count}} produit", "results_plural": "{{count}} produits" },
+  "product": { "addToCart": "Ajouter au Panier", "size": "Taille", "selectSize": "Sélectionner", "quantity": "Quantité", "buy": "Acheter", "freeShipping": "Livraison gratuite +999€", "sku": "SKU" },
+  "cart": { "title": "Votre Panier", "empty": "Votre panier est vide", "emptySub": "Ajoutez des produits pour commencer vos achats !", "goShop": "Aller à la Boutique", "subtotal": "Sous-total", "shipping": "Livraison", "total": "Total", "checkout": "Passer la Commande", "keepBuying": "Continuer les achats" },
+  "checkout": { "title": "Finaliser la Commande", "shipping": "Détails de Livraison", "summary": "Résumé", "pay": "Payer {{amount}}€", "processing": "Traitement...", "free": "GRATUIT" },
+  "orders": { "title": "Mes Commandes", "empty": "Aucune commande pour le moment", "emptySub": "Achetez quelque chose pour voir vos commandes ici !" },
+  "login": { "title": "Connexion", "register": "Créer un Compte", "subtitle": "Bon retour parmi nous", "registerSub": "Rejoignez UrbanStyle", "email": "E-mail", "password": "Mot de passe", "firstName": "Prénom", "lastName": "Nom", "phone": "Téléphone", "haveAccount": "Vous avez déjà un compte ?", "noAccount": "Pas encore de compte ?", "signIn": "Se connecter", "signUp": "S'inscrire" },
+  "footer": { "desc": "Votre boutique de vêtements préférée. Style, qualité et tendances en un seul endroit.", "links": "Liens", "account": "Mon Compte", "contact": "Contact", "rights": "Tous droits réservés." }
+}

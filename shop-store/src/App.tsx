@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -15,6 +17,7 @@ import Login from './pages/Login';
 export default function App() {
   return (
     <BrowserRouter>
+      <I18nextProvider i18n={i18n}>
       <ThemeProvider>
         <AuthProvider>
           <CartProvider>
@@ -36,6 +39,7 @@ export default function App() {
           </CartProvider>
         </AuthProvider>
       </ThemeProvider>
+      </I18nextProvider>
     </BrowserRouter>
   );
 }

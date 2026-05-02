@@ -1,0 +1,10 @@
+{
+  "nav": { "store": "Shop", "cart": "Cart", "orders": "My Orders", "login": "Sign In", "logout": "Logout", "hello": "Hi" },
+  "home": { "hero": "New Spring Collection", "heroSub": "Discover the latest fashion trends. Style, comfort and quality in every garment.", "search": "Search products...", "all": "All", "results": "{{count}} product", "results_plural": "{{count}} products" },
+  "product": { "addToCart": "Add to Cart", "size": "Size", "selectSize": "Select", "quantity": "Quantity", "buy": "Buy", "freeShipping": "Free shipping +$999", "sku": "SKU" },
+  "cart": { "title": "Your Cart", "empty": "Your cart is empty", "emptySub": "Add products to start shopping!", "goShop": "Go to Shop", "subtotal": "Subtotal", "shipping": "Shipping", "total": "Total", "checkout": "Proceed to Checkout", "keepBuying": "Continue shopping" },
+  "checkout": { "title": "Checkout", "shipping": "Shipping Details", "summary": "Summary", "pay": "Pay ${{amount}}", "processing": "Processing...", "free": "FREE" },
+  "orders": { "title": "My Orders", "empty": "No orders yet", "emptySub": "Buy something to see your orders here!" },
+  "login": { "title": "Sign In", "register": "Create Account", "subtitle": "Welcome back", "registerSub": "Join UrbanStyle", "email": "Email", "password": "Password", "firstName": "First Name", "lastName": "Last Name", "phone": "Phone", "haveAccount": "Already have an account?", "noAccount": "Don't have an account?", "signIn": "Sign in", "signUp": "Sign up" },
+  "footer": { "desc": "Your favorite clothing store. Style, quality and trends in one place.", "links": "Links", "account": "My Account", "contact": "Contact", "rights": "All rights reserved." }
+}
