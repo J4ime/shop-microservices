@@ -41,7 +41,7 @@ services:
 
   auth-api:
     build:
-      context: ./Shop.Auth
+      context: ./shop-auth
       dockerfile: Dockerfile
     container_name: auth-api
     ports:
@@ -62,7 +62,7 @@ services:
 
   shop-api:
     build:
-      context: .
+      context: ./shop-api
       dockerfile: Dockerfile
     container_name: shop-api
     ports:
