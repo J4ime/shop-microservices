@@ -5,12 +5,6 @@ import { useCart } from '../context/CartContext';
 import { ShoppingCart, Minus, Plus, Star, Truck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const colorMap: Record<string, string> = {
-  Negro: '#1a1a1a', Blanco: '#f5f5f5', Azul: '#3b82f6', 'Azul Marino': '#1e3a5f',
-  Rojo: '#ef4444', Gris: '#9ca3af', 'Gris Melange': '#b0b0b0', 'Verde Olivo': '#556b2f',
-  Beige: '#d4c5a9', Café: '#8b4513', Verde: '#22c55e', 'Estampado Floral': '#ec4899', 'Negro/Blanco': '#333',
-};
-
 export default function ProductDetail() {
   const { id } = useParams(); const navigate = useNavigate(); const { addItem } = useCart();
   const [product, setProduct] = useState<any>(null);
@@ -26,14 +20,13 @@ export default function ProductDetail() {
     addItem({ productId: product.id, name: product.name, price: product.price, size: selectedSize, quantity }); toast.success('¡Agregado!'); setQuantity(1);
   };
 
-  const bgColor = product.color ? (colorMap[product.color] || '#e5e7eb') : '#e5e7eb';
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid md:grid-cols-2 gap-12">
         <div className="rounded-3xl h-96 md:h-[500px] overflow-hidden bg-gray-100 dark:bg-gray-800">
           <img src={product.imageUrl || `https://picsum.photos/seed/${product.id.replace(/-/g,'').slice(0,8)}/800/1000`} alt={product.name}
             className="w-full h-full object-cover" />
+        </div>
         <div>
           <p className="text-sm text-indigo-600 dark:text-indigo-400 font-semibold uppercase tracking-wide">{product.brand || 'UrbanStyle'}</p>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{product.name}</h1>
