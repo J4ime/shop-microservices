@@ -5,6 +5,7 @@ using Serilog;
 using Shop.Api.Extensions;
 using Shop.Api.Middleware;
 using Shop.Infrastructure.Data;
+using System.Text;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -64,48 +65,20 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var authServiceUrl = builder.Configuration.GetValue<string>("AuthService:ValidationUrl");
-
-    if (!string.IsNullOrWhiteSpace(authServiceUrl))
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.RequireHttpsMetadata = false;
-        options.Authority = authServiceUrl;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"]
-        };
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                var token = context.Request.Headers["Authorization"].FirstOrDefault()?
-                    .Replace("Bearer ", "");
-                if (!string.IsNullOrEmpty(token))
-                    context.Token = token;
-                return Task.CompletedTask;
-            }
-        };
-    }
-    else
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(
-                    builder.Configuration["Jwt:Key"] ?? "ShopDefaultKeyForDevelopment1234567890!"))
-        };
-    }
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                builder.Configuration["Jwt:Key"] ?? "AuthDefaultKey1234567890!@#$%^&*()")),
+        ClockSkew = TimeSpan.FromMinutes(1)
+    };
 });
 
 builder.Services.AddAuthorization();

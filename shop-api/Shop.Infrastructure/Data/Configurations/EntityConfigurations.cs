@@ -19,6 +19,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.Brand).HasMaxLength(100);
         builder.Property(x => x.Material).HasMaxLength(100);
         builder.Property(x => x.Color).HasMaxLength(50);
+        builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
         builder.HasOne(x => x.Category).WithMany(c => c.Products)
             .HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);

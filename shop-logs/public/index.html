@@ -6,38 +6,66 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'JetBrains Mono',Cascadia Code,Consolas,monospace;background:#0d1117;color:#c9d1d9;height:100vh;display:flex}
-aside{width:220px;background:#161b22;border-right:1px solid #21262d;display:flex;flex-direction:column}
-aside h1{padding:20px 16px;font-size:15px;font-weight:700;color:#f0f6fc;letter-spacing:1px;border-bottom:1px solid #21262d}
-aside nav{flex:1;padding:8px}
-aside nav button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font:13px inherit;background:transparent;color:#8b949e;margin-bottom:2px;text-align:left;transition:all .15s}
+aside{width:240px;background:#161b22;border-right:1px solid #21262d;display:flex;flex-direction:column}
+aside h1{padding:18px 16px;font-size:14px;font-weight:700;color:#f0f6fc;letter-spacing:2px;border-bottom:1px solid #21262d}
+aside nav{flex:1;padding:8px;overflow-y:auto}
+aside nav button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:8px;border:none;cursor:pointer;font:12px inherit;background:transparent;color:#8b949e;margin-bottom:2px;text-align:left;transition:all .15s}
 aside nav button:hover{background:#1f2937;color:#f0f6fc}
 aside nav button.active{background:#1f2937;color:#f0f6fc}
-aside .dot{width:24px;height:24px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-aside footer{padding:12px 16px;border-top:1px solid #21262d;display:flex;flex-direction:column;gap:8px;font-size:11px}
-aside footer label{display:flex;align-items:center;gap:8px;color:#8b949e;cursor:pointer}
-aside footer button{padding:6px 12px;border-radius:6px;border:1px solid #30363d;background:transparent;color:#8b949e;cursor:pointer;font:11px inherit}
-.status{padding:0 16px 12px;display:flex;align-items:center;gap:6px;font-size:11px;color:#8b949e}
-.status span{width:8px;height:8px;border-radius:50%;display:inline-block}
-main{flex:1;overflow:auto;padding:12px 16px}
-main header{position:sticky;top:0;background:#0d1117;padding-bottom:8px;border-bottom:1px solid #21262d;margin-bottom:8px;z-index:1;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600}
-.line{padding:3px 0;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all;border-bottom:1px solid #161b22}
-.err{color:#f85149}.warn{color:#d29922}.info{color:#58a6ff}.http{color:#7ee787}.sql{color:#bc8cff}.debug{color:#8b949e}
+aside .dot{width:22px;height:22px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+aside .status{padding:0 16px 10px;display:flex;align-items:center;gap:6px;font-size:10px;color:#8b949e}
+aside .status span.d{width:7px;height:7px;border-radius:50%;display:inline-block}
+aside footer{padding:10px 16px;border-top:1px solid #21262d;display:flex;flex-direction:column;gap:8px;font-size:11px}
+aside footer label{display:flex;align-items:center;gap:8px;color:#8b949e;cursor:pointer;font-size:11px}
+aside footer select, aside footer button{padding:6px 10px;border-radius:6px;border:1px solid #30363d;background:transparent;color:#c9d1d9;cursor:pointer;font:11px inherit;width:100%}
+aside footer select{background:#161b22}
+aside footer select option{background:#161b22;color:#c9d1d9}
+aside footer button:hover{background:#1f2937}
+.lvl label{cursor:pointer;display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0}
+.lvl label input[type=radio]{accent-color:#58a6ff}
+main{flex:1;overflow:auto;display:flex;flex-direction:column}
+main header{position:sticky;top:0;background:#0d1117;padding:12px 16px 8px;border-bottom:1px solid #21262d;z-index:1;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+main header .count{color:#8b949e;font-size:11px}
+#log{flex:1;padding:6px 16px;overflow-y:auto}
+.line{padding:2px 0;font-size:12px;line-height:1.55;white-space:pre-wrap;word-break:break-all;border-bottom:1px solid #161b22;font-family:inherit}
+.line.error{color:#f85149}.line.warn{color:#d29922}.line.info{color:#58a6ff}.line.http{color:#7ee787}
+.line.sql{color:#bc8cff}.line.debug{color:#8b949e}.line.unknown{color:#484f58}
+.lvl-badge{display:inline-block;width:48px;text-align:center;font-size:10px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:8px;flex-shrink:0}
+.lvl-error{background:#f8514920;color:#f85149}.lvl-warn{background:#d2992220;color:#d29922}.lvl-info{background:#58a6ff20;color:#58a6ff}
+.lvl-http{background:#7ee78720;color:#7ee787}.lvl-sql{background:#bc8cff20;color:#bc8cff}.lvl-debug{background:#8b949e20;color:#8b949e}
+.lvl-unknown{background:#484f5820;color:#484f58}
+.no-logs{display:flex;align-items:center;justify-content:center;height:100%;color:#484f58;font-size:14px}
 </style>
 </head>
 <body>
 <aside>
   <h1>SHOP LOGS</h1>
-  <div class="status"><span id="dot"></span><span id="statusText">Connecting...</span></div>
+  <div class="status"><span class="d" id="dot"></span><span id="statusText">Connecting...</span></div>
   <nav id="nav"></nav>
   <footer>
-    <label><input type="checkbox" id="autoscroll" checked> Auto‑scroll</label>
+    <label style="font-weight:600;color:#f0f6fc;margin-bottom:2px">Filtrar nivel</label>
+    <div class="lvl">
+      <label><input type="radio" name="level" value="ALL" checked onchange="changeLevel('ALL')"> Todos</label>
+      <label><input type="radio" name="level" value="ERROR" onchange="changeLevel('ERROR')"> 🔴 Error</label>
+      <label><input type="radio" name="level" value="WARN" onchange="changeLevel('WARN')"> 🟡 Warning</label>
+      <label><input type="radio" name="level" value="INFO" onchange="changeLevel('INFO')"> 🔵 Info</label>
+      <label><input type="radio" name="level" value="HTTP" onchange="changeLevel('HTTP')"> 🟢 HTTP</label>
+      <label><input type="radio" name="level" value="SQL" onchange="changeLevel('SQL')"> 🟣 SQL</label>
+    </div>
+    <label style="margin-top:6px"><input type="checkbox" id="autoscroll" checked> Auto‑scroll</label>
     <button id="pauseBtn">⏸ Pausar</button>
     <button id="clearBtn">✕ Limpiar</button>
+    <select id="tailSelect" onchange="reconnect()">
+      <option value="100">100 líneas</option>
+      <option value="200" selected>200 líneas</option>
+      <option value="500">500 líneas</option>
+      <option value="1000">1000 líneas</option>
+    </select>
   </footer>
 </aside>
 <main>
-  <header><span id="title">Shop API</span><span id="live"></span></header>
-  <div id="logContainer"></div>
+  <header><span id="title">Shop API</span><span id="live" style="color:#10b981;font-size:10px;font-weight:600">● LIVE</span><span class="count" id="count">0 líneas</span></header>
+  <div id="log"><div class="no-logs">Esperando logs...</div></div>
 </main>
 <script>
 const SERVICES = [
@@ -46,68 +74,73 @@ const SERVICES = [
   { id:'shop-postgres', name:'Shop DB', color:'#f59e0b', icon:'P' },
   { id:'auth-postgres', name:'Auth DB', color:'#ec4899', icon:'D' },
 ];
-let selected = 'shop-api', ws, paused = false;
-const log = document.getElementById('logContainer');
+let selected='shop-api', ws, paused=false, currentLevel='ALL', lineCount=0;
+const log = document.getElementById('log');
 const title = document.getElementById('title');
 const live = document.getElementById('live');
 const dot = document.getElementById('dot');
 const statusText = document.getElementById('statusText');
+const count = document.getElementById('count');
 
-function connect(service) {
-  if(ws) ws.close();
-  log.innerHTML = '';
-  live.textContent = 'LIVE'; live.style.color='#10b981';
-  const proto = location.protocol==='https:'?'wss':'ws';
-  ws = new WebSocket(`${proto}://${location.host}/ws?service=${service}&tail=200`);
-  ws.onopen = () => { dot.style.background='#10b981'; statusText.textContent='Live'; };
-  ws.onclose = () => { dot.style.background='#ef4444'; statusText.textContent='Disconnected'; };
-  ws.onmessage = (e) => {
+const LBL={ERROR:'ERR',WARN:'WRN',INFO:'INF',HTTP:'HTTP',SQL:'SQL',DEBUG:'DBG',UNKNOWN:'---'};
+const LVL=['ERROR','WARN','INFO','HTTP','SQL','DEBUG','UNKNOWN'];
+
+function connect(service){
+  if(ws){try{ws.close()}catch(e){}}
+  log.innerHTML='<div class=no-logs>Esperando logs...</div>';
+  lineCount=0;count.textContent='0 líneas';
+  live.innerHTML='● LIVE';live.style.color='#10b981';
+  const proto=location.protocol==='https:'?'wss':'ws';
+  const tail=document.getElementById('tailSelect').value||200;
+  ws=new WebSocket(`${proto}://${location.host}/ws?service=${service}&tail=${tail}&level=${currentLevel}`);
+  ws.onopen=()=>{dot.style.background='#10b981';statusText.textContent='Live'};
+  ws.onclose=()=>{dot.style.background='#ef4444';statusText.textContent='Offline'};
+  ws.onmessage=(e)=>{
     try{
-      const d = JSON.parse(e.data);
-      if(d.error) return;
-      const div = document.createElement('div');
-      div.className = 'line';
-      let cls = '';
-      const msg = (d.message||'').trim();
-      if(/ERROR|error|fail|exception|crit/i.test(msg)) cls='err';
-      else if(/WARN|warn/i.test(msg)) cls='warn';
-      else if(/INFO|info|success/i.test(msg)) cls='info';
-      else if(/HTTP|GET|POST|PUT|DELETE|PATCH/i.test(msg)) cls='http';
-      else if(/sql|SQL|query/i.test(msg)) cls='sql';
-      else cls='debug';
-      div.innerHTML = `<span class="${cls}">${escapeHtml(msg)}</span>`;
+      const d=JSON.parse(e.data);
+      if(d.error)return;
+      if(log.querySelector('.no-logs'))log.innerHTML='';
+      lineCount++;
+      count.textContent=lineCount+' líneas';
+      const div=document.createElement('div');
+      const lvl=(d.level||'UNKNOWN').toLowerCase();
+      div.className=`line ${lvl}`;
+      const lvlClass=`lvl-${lvl}`;
+      div.innerHTML=`<span class="lvl-badge ${lvlClass}">${LBL[d.level||'UNKNOWN']||'---'}</span>${escapeHtml(d.message||'')}`;
       log.appendChild(div);
-      if(document.getElementById('autoscroll').checked && !paused) div.scrollIntoView({behavior:'smooth'});
-    }catch{}
+      if(document.getElementById('autoscroll').checked&&!paused)div.scrollIntoView({behavior:'smooth'});
+    }catch(e){}
   };
 }
 
 function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function changeLevel(l){currentLevel=l;reconnect();}
+function reconnect(){if(!paused)connect(selected);}
 
-// Nav
-const nav = document.getElementById('nav');
-SERVICES.forEach(s => {
-  const btn = document.createElement('button');
-  btn.innerHTML = `<span class="dot" style="background:${s.color}">${s.icon}</span>${s.name}`;
-  btn.onclick = () => {
+const nav=document.getElementById('nav');
+const tail=document.getElementById('tailSelect');
+SERVICES.forEach(s=>{
+  const btn=document.createElement('button');
+  btn.innerHTML=`<span class="dot" style="background:${s.color}">${s.icon}</span>${s.name}`;
+  btn.onclick=()=>{
     document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    selected = s.id; title.textContent = s.name; paused = false; live.style.display='';
-    document.getElementById('pauseBtn').textContent = '⏸ Pausar';
+    selected=s.id;title.textContent=s.name;paused=false;live.style.display='';
+    document.getElementById('pauseBtn').textContent='⏸ Pausar';
     connect(s.id);
   };
   nav.appendChild(btn);
 });
 nav.firstChild?.classList.add('active');
 
-document.getElementById('pauseBtn').onclick = function(){
-  paused = !paused;
-  this.textContent = paused ? '▶ Reanudar' : '⏸ Pausar';
-  live.style.display = paused ? 'none' : '';
-  if(paused) ws?.close();
+document.getElementById('pauseBtn').onclick=function(){
+  paused=!paused;
+  this.textContent=paused?'▶ Reanudar':'⏸ Pausar';
+  live.style.display=paused?'none':'';
+  if(paused)ws?.close();
   else connect(selected);
 };
-document.getElementById('clearBtn').onclick = () => { log.innerHTML = ''; };
+document.getElementById('clearBtn').onclick=()=>{log.innerHTML='<div class=no-logs>Limpiado</div>';lineCount=0;count.textContent='0 líneas'};
 
 connect('shop-api');
 </script>
