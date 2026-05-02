@@ -6,6 +6,7 @@ COPY Shop.Domain/Shop.Domain.csproj ./Shop.Domain/
 COPY Shop.Application/Shop.Application.csproj ./Shop.Application/
 COPY Shop.Infrastructure/Shop.Infrastructure.csproj ./Shop.Infrastructure/
 COPY Shop.Api/Shop.Api.csproj ./Shop.Api/
+COPY Shop.UnitTests/Shop.UnitTests.csproj ./Shop.UnitTests/
 
 RUN dotnet restore
 

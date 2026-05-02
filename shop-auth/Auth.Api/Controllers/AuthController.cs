@@ -193,4 +193,28 @@ public class AuthController : ControllerBase
 
         return Ok(new { success = true, message = "Token revoked." });
     }
+
+    [HttpPost("seed-admin")]
+    public async Task<IActionResult> SeedAdmin()
+    {
+        var existing = await _userRepo.GetByEmailAsync("admin@shop.com");
+        if (existing is not null)
+        {
+            existing.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Test1234!");
+            await _userRepo.UpdateAsync(existing);
+        }
+        else
+        {
+            await _userRepo.AddAsync(new Domain.Entities.User
+            {
+                Email = "admin@shop.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Test1234!"),
+                FirstName = "Admin",
+                LastName = "Sistema",
+                Role = Domain.Enums.UserRole.Admin
+            });
+        }
+        await _uow.SaveChangesAsync();
+        return Ok(new { success = true, message = "Admin seeded" });
+    }
 }

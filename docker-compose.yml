@@ -82,6 +82,18 @@ services:
     networks:
       - shop-network
 
+  shop-logs:
+    build:
+      context: ./shop-logs
+      dockerfile: Dockerfile
+    container_name: shop-logs
+    ports:
+      - "7000:7000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - shop-network
+
 volumes:
   postgres-data:
   auth-data:

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Shop Logs</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'JetBrains Mono',Cascadia Code,Consolas,monospace;background:#0d1117;color:#c9d1d9;height:100vh;display:flex}
+aside{width:220px;background:#161b22;border-right:1px solid #21262d;display:flex;flex-direction:column}
+aside h1{padding:20px 16px;font-size:15px;font-weight:700;color:#f0f6fc;letter-spacing:1px;border-bottom:1px solid #21262d}
+aside nav{flex:1;padding:8px}
+aside nav button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font:13px inherit;background:transparent;color:#8b949e;margin-bottom:2px;text-align:left;transition:all .15s}
+aside nav button:hover{background:#1f2937;color:#f0f6fc}
+aside nav button.active{background:#1f2937;color:#f0f6fc}
+aside .dot{width:24px;height:24px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+aside footer{padding:12px 16px;border-top:1px solid #21262d;display:flex;flex-direction:column;gap:8px;font-size:11px}
+aside footer label{display:flex;align-items:center;gap:8px;color:#8b949e;cursor:pointer}
+aside footer button{padding:6px 12px;border-radius:6px;border:1px solid #30363d;background:transparent;color:#8b949e;cursor:pointer;font:11px inherit}
+.status{padding:0 16px 12px;display:flex;align-items:center;gap:6px;font-size:11px;color:#8b949e}
+.status span{width:8px;height:8px;border-radius:50%;display:inline-block}
+main{flex:1;overflow:auto;padding:12px 16px}
+main header{position:sticky;top:0;background:#0d1117;padding-bottom:8px;border-bottom:1px solid #21262d;margin-bottom:8px;z-index:1;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600}
+.line{padding:3px 0;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all;border-bottom:1px solid #161b22}
+.err{color:#f85149}.warn{color:#d29922}.info{color:#58a6ff}.http{color:#7ee787}.sql{color:#bc8cff}.debug{color:#8b949e}
+</style>
+</head>
+<body>
+<aside>
+  <h1>SHOP LOGS</h1>
+  <div class="status"><span id="dot"></span><span id="statusText">Connecting...</span></div>
+  <nav id="nav"></nav>
+  <footer>
+    <label><input type="checkbox" id="autoscroll" checked> Auto‑scroll</label>
+    <button id="pauseBtn">⏸ Pausar</button>
+    <button id="clearBtn">✕ Limpiar</button>
+  </footer>
+</aside>
+<main>
+  <header><span id="title">Shop API</span><span id="live"></span></header>
+  <div id="logContainer"></div>
+</main>
+<script>
+const SERVICES = [
+  { id:'shop-api', name:'Shop API', color:'#6366f1', icon:'S' },
+  { id:'auth-api', name:'Auth API', color:'#10b981', icon:'A' },
+  { id:'shop-postgres', name:'Shop DB', color:'#f59e0b', icon:'P' },
+  { id:'auth-postgres', name:'Auth DB', color:'#ec4899', icon:'D' },
+];
+let selected = 'shop-api', ws, paused = false;
+const log = document.getElementById('logContainer');
+const title = document.getElementById('title');
+const live = document.getElementById('live');
+const dot = document.getElementById('dot');
+const statusText = document.getElementById('statusText');
+
+function connect(service) {
+  if(ws) ws.close();
+  log.innerHTML = '';
+  live.textContent = 'LIVE'; live.style.color='#10b981';
+  const proto = location.protocol==='https:'?'wss':'ws';
+  ws = new WebSocket(`${proto}://${location.host}/ws?service=${service}&tail=200`);
+  ws.onopen = () => { dot.style.background='#10b981'; statusText.textContent='Live'; };
+  ws.onclose = () => { dot.style.background='#ef4444'; statusText.textContent='Disconnected'; };
+  ws.onmessage = (e) => {
+    try{
+      const d = JSON.parse(e.data);
+      if(d.error) return;
+      const div = document.createElement('div');
+      div.className = 'line';
+      let cls = '';
+      const msg = (d.message||'').trim();
+      if(/ERROR|error|fail|exception|crit/i.test(msg)) cls='err';
+      else if(/WARN|warn/i.test(msg)) cls='warn';
+      else if(/INFO|info|success/i.test(msg)) cls='info';
+      else if(/HTTP|GET|POST|PUT|DELETE|PATCH/i.test(msg)) cls='http';
+      else if(/sql|SQL|query/i.test(msg)) cls='sql';
+      else cls='debug';
+      div.innerHTML = `<span class="${cls}">${escapeHtml(msg)}</span>`;
+      log.appendChild(div);
+      if(document.getElementById('autoscroll').checked && !paused) div.scrollIntoView({behavior:'smooth'});
+    }catch{}
+  };
+}
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// Nav
+const nav = document.getElementById('nav');
+SERVICES.forEach(s => {
+  const btn = document.createElement('button');
+  btn.innerHTML = `<span class="dot" style="background:${s.color}">${s.icon}</span>${s.name}`;
+  btn.onclick = () => {
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selected = s.id; title.textContent = s.name; paused = false; live.style.display='';
+    document.getElementById('pauseBtn').textContent = '⏸ Pausar';
+    connect(s.id);
+  };
+  nav.appendChild(btn);
+});
+nav.firstChild?.classList.add('active');
+
+document.getElementById('pauseBtn').onclick = function(){
+  paused = !paused;
+  this.textContent = paused ? '▶ Reanudar' : '⏸ Pausar';
+  live.style.display = paused ? 'none' : '';
+  if(paused) ws?.close();
+  else connect(selected);
+};
+document.getElementById('clearBtn').onclick = () => { log.innerHTML = ''; };
+
+connect('shop-api');
+</script>
+</body>
+</html>

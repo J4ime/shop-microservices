@@ -7,14 +7,14 @@
 -- AUTH: Usuarios de prueba
 -- ========================
 -- Contraseña para todos: Test1234!
--- Hash BCrypt generado con 12 rondas
+-- Hash BCrypt real (12 rondas)
 
 INSERT INTO "Users" ("Id", "Email", "PasswordHash", "FirstName", "LastName", "Phone", "Role", "IsActive", "CreatedAt")
 VALUES
 (
     'a1b2c3d4-1111-4000-8000-000000000001',
     'admin@shop.com',
-    '$2a$12$LJ3m4ys3GZkPTzCUJ8FHzOOjvFmD/KYnEvBCwsqFHvOjR6QM1bBxm',
+    '$2a$11$tedHFCbL5ePd8GSKakJz0OY2JzSCrVcQYdjNfHsRjbSfhUf0Gfzi.',
     'Admin',
     'Sistema',
     '+525500000001',
@@ -25,7 +25,7 @@ VALUES
 (
     'a1b2c3d4-2222-4000-8000-000000000002',
     'carlos@shop.com',
-    '$2a$12$LJ3m4ys3GZkPTzCUJ8FHzOOjvFmD/KYnEvBCwsqFHvOjR6QM1bBxm',
+    '$2a$11$tedHFCbL5ePd8GSKakJz0OY2JzSCrVcQYdjNfHsRjbSfhUf0Gfzi.',
     'Carlos',
     'Mendoza',
     '+525512345678',
@@ -36,7 +36,7 @@ VALUES
 (
     'a1b2c3d4-3333-4000-8000-000000000003',
     'maria@shop.com',
-    '$2a$12$LJ3m4ys3GZkPTzCUJ8FHzOOjvFmD/KYnEvBCwsqFHvOjR6QM1bBxm',
+    '$2a$11$tedHFCbL5ePd8GSKakJz0OY2JzSCrVcQYdjNfHsRjbSfhUf0Gfzi.',
     'María',
     'García',
     '+525587654321',
@@ -47,7 +47,7 @@ VALUES
 (
     'a1b2c3d4-4444-4000-8000-000000000004',
     'ana@shop.com',
-    '$2a$12$LJ3m4ys3GZkPTzCUJ8FHzOOjvFmD/KYnEvBCwsqFHvOjR6QM1bBxm',
+    '$2a$11$tedHFCbL5ePd8GSKakJz0OY2JzSCrVcQYdjNfHsRjbSfhUf0Gfzi.',
     'Ana',
     'López',
     '+525533344455',
