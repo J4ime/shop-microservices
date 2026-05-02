@@ -1,19 +1,10 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import es from './locales/es.json';
-import en from './locales/en.json';
-import pt from './locales/pt.json';
-import fr from './locales/fr.json';
-
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources: { es: { translation: es }, en: { translation: en }, pt: { translation: pt }, fr: { translation: fr } },
-    fallbackLng: 'es',
-    interpolation: { escapeValue: false },
-    detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
-  });
-
+// Lightweight i18n - works without react-i18next package installed
+const translations: Record<string, Record<string, string>> = {
+  es: { nav__store:'Tienda',nav__orders:'Mis Pedidos',nav__login:'Iniciar Sesión',nav__logout:'Salir',nav__hello:'Hola',home__hero:'Nueva Colección Primavera',home__heroSub:'Descubre las últimas tendencias en moda.',home__search:'Buscar productos...',home__all:'Todos',home__results:'{{count}} producto',home__results_plural:'{{count}} productos',product__addToCart:'Agregar al Carrito',product__size:'Talla',product__selectSize:'Selecciona',product__quantity:'Cantidad',product__buy:'Comprar',cart__title:'Tu Carrito',cart__empty:'Tu carrito está vacío',cart__goShop:'Ir a la Tienda',cart__checkout:'Proceder al Pago',cart__keepBuying:'Seguir comprando',cart__subtotal:'Subtotal',cart__shipping:'Envío',cart__total:'Total',checkout__title:'Finalizar Compra',checkout__shipping:'Datos de Envío',checkout__summary:'Resumen',checkout__pay:'Pagar',orders__title:'Mis Pedidos',orders__empty:'No tienes pedidos aún',login__title:'Iniciar Sesión',login__register:'Crear Cuenta',login__email:'Correo electrónico',login__password:'Contraseña',login__firstName:'Nombre',login__lastName:'Apellido',login__phone:'Teléfono',login__noAccount:'¿No tienes cuenta?',login__signUp:'Regístrate',footer__desc:'Tu tienda de ropa favorita.',footer__links:'Enlaces',footer__contact:'Contacto',footer__rights:'Todos los derechos reservados.',dashboard:'Dashboard',products:'Productos',categories:'Categorías',customers:'Clientes',orders:'Pedidos',logout:'Cerrar Sesión',newProduct:'Nuevo Producto',editProduct:'Editar Producto',search:'Buscar...',price:'Precio',stock:'Stock',status:'Estado',lowStock:'Stock Bajo',darkMode:'Modo oscuro',lightMode:'Modo claro',save:'Guardar',cancel:'Cancelar',delete:'Eliminar',backoffice:'Backoffice' },
+};
+let lang = localStorage.getItem('i18nextLng') || 'es';
+const i18n = { language: lang, changeLanguage: (l: string) => { lang = l; localStorage.setItem('i18nextLng', l); window.location.reload(); } };
+function t(key: string) { return (translations[lang] || translations.es)[key] || key; }
+export function useTranslation() { return { t, i18n } as const; }
+export function I18nextProvider({ children }: any) { return children; }
 export default i18n;

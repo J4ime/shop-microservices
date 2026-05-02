@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../i18n';
 import { LayoutDashboard, Package, Tags, Users, ShoppingBag, LogOut, ChevronRight, Sun, Moon, Globe } from 'lucide-react';
 
 const flags: Record<string, string> = { es: '🇪🇸', en: '🇬🇧', pt: '🇧🇷', fr: '🇫🇷' };
