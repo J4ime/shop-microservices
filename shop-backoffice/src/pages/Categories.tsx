@@ -1,68 +1,21 @@
-import { useEffect, useState } from 'react';
-import { categoriesApi } from '../services/api';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react'; import { categoriesApi } from '../services/api'; import { Plus, Edit2, Trash2 } from 'lucide-react'; import toast from 'react-hot-toast';
 
 export default function Categories() {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [modal, setModal] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => { categoriesApi.getAll().then(r => setCategories(r.data.data || [])).finally(() => setLoading(false)); }, []);
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('¿Eliminar categoría?')) return;
-    await categoriesApi.delete(id);
-    setCategories(p => p.filter(x => x.id !== id));
-    toast.success('Categoría eliminada');
-  };
+  const [categories, setCategories] = useState<any[]>([]); const [modal, setModal] = useState<any>(null); const [loading, setLoading] = useState(true);
+  useEffect(() => { categoriesApi.getAll().then(r=>setCategories(r.data.data||[])).finally(()=>setLoading(false)); }, []);
+  const handleDelete = async (id: string) => { if(!confirm('¿Eliminar?')) return; await categoriesApi.delete(id); setCategories(p=>p.filter(x=>x.id!==id)); toast.success('Eliminada'); };
 
   return (
-    <div>
-      <div className="flex justify-between mb-8"><h1 className="text-2xl font-bold">Categorías</h1>
-        <button onClick={() => setModal({})} className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm"><Plus size={18} /> Nueva</button>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {categories.map(c => (
-          <div key={c.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex justify-between items-start"><h3 className="font-semibold text-lg">{c.name}</h3>
-              <div className="flex gap-1"><button onClick={() => setModal(c)} className="p-1.5 text-gray-400 hover:text-indigo-600"><Edit2 size={15} /></button>
-                <button onClick={() => handleDelete(c.id)} className="p-1.5 text-gray-400 hover:text-red-500"><Trash2 size={15} /></button></div>
-            </div>
-            <p className="text-sm text-gray-400 mt-2">{c.description || 'Sin descripción'}</p>
-            <div className="flex items-center gap-2 mt-4"><span className="text-2xl font-bold text-indigo-600">{c.productCount}</span><span className="text-sm text-gray-400">productos</span>
-              {c.gender && <span className="ml-auto text-xs bg-gray-100 px-2 py-1 rounded-full">{c.gender}</span>}
-            </div>
-          </div>
-        ))}
-      </div>
-      {modal && <CatModal cat={modal} onClose={() => setModal(null)} onSave={(c: any) => { if (c.id) setCategories(p => p.map(x => x.id === c.id ? c : x)); else setCategories(p => [...p, c]); setModal(null); }} />}
+    <div><div className="flex justify-between mb-8"><h1 className="text-2xl font-bold text-gray-900 dark:text-white">Categorías</h1><button onClick={()=>setModal({})} className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm"><Plus size={18}/> Nueva</button></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">{categories.map(c=>(<div key={c.id} className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800"><div className="flex justify-between items-start"><h3 className="font-semibold text-lg text-gray-900 dark:text-white">{c.name}</h3><div className="flex gap-1"><button onClick={()=>setModal(c)} className="p-1.5 text-gray-400 hover:text-indigo-600"><Edit2 size={15}/></button><button onClick={()=>handleDelete(c.id)} className="p-1.5 text-gray-400 hover:text-red-500"><Trash2 size={15}/></button></div></div><p className="text-sm text-gray-400 mt-2">{c.description||'Sin descripción'}</p><div className="flex items-center gap-2 mt-4"><span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{c.productCount}</span><span className="text-sm text-gray-400">productos</span>{c.gender&&<span className="ml-auto text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full">{c.gender}</span>}</div></div>))}</div>
+      {modal && <CatModal cat={modal} onClose={()=>setModal(null)} onSave={(c:any)=>{if(c.id) setCategories(p=>p.map(x=>x.id===c.id?c:x)); else setCategories(p=>[...p,c]); setModal(null);}}/>}
     </div>
   );
 }
 
 function CatModal({ cat, onClose, onSave }: any) {
-  const [form, setForm] = useState({ name: cat.name || '', description: cat.description || '', gender: cat.gender || '' });
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => { e.preventDefault(); setLoading(true);
-    try { const res = cat.id ? await categoriesApi.update(cat.id, form) : await categoriesApi.create(form); onSave(res.data.data); toast.success(cat.id ? 'Actualizada' : 'Creada'); }
-    catch (err: any) { toast.error(err.response?.data?.error?.message || 'Error'); } setLoading(false); };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
-        <h2 className="text-xl font-bold mb-6">{cat.id ? 'Editar Categoría' : 'Nueva Categoría'}</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nombre *" required value={form.name} onChange={e => setForm(s => ({ ...s, name: e.target.value }))} />
-          <textarea className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Descripción" rows={3} value={form.description} onChange={e => setForm(s => ({ ...s, description: e.target.value }))} />
-          <select className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500" value={form.gender} onChange={e => setForm(s => ({ ...s, gender: e.target.value }))}>
-            <option value="">Sin género</option><option value="Men">Hombre</option><option value="Women">Mujer</option><option value="Unisex">Unisex</option><option value="Kids">Niños</option>
-          </select>
-          <div className="flex gap-3 pt-2"><button type="button" onClick={onClose} className="flex-1 py-3 border rounded-xl font-semibold text-gray-600">Cancelar</button>
-            <button type="submit" disabled={loading} className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold">{loading ? '...' : 'Guardar'}</button></div>
-        </form>
-      </div>
-    </div>
-  );
+  const [form, setForm] = useState({ name: cat.name || '', description: cat.description || '', gender: cat.gender || '' }); const [loading, setLoading] = useState(false);
+  const cls = "w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500";
+  const h = async (e: React.FormEvent) => { e.preventDefault(); setLoading(true); try { const r = cat.id ? await categoriesApi.update(cat.id, form) : await categoriesApi.create(form); onSave(r.data.data); toast.success(cat.id?'Actualizada':'Creada'); } catch(err:any){ toast.error(err.response?.data?.error?.message||'Error'); } setLoading(false); };
+  return (<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}><div className="bg-white dark:bg-gray-900 rounded-3xl p-8 w-full max-w-md shadow-2xl" onClick={e=>e.stopPropagation()}><h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{cat.id?'Editar':'Nueva'} Categoría</h2><form onSubmit={h} className="space-y-4"><input className={cls} placeholder="Nombre *" required value={form.name} onChange={e=>setForm(s=>({...s,name:e.target.value}))}/><textarea className={cls} placeholder="Descripción" rows={3} value={form.description} onChange={e=>setForm(s=>({...s,description:e.target.value}))}/><select className={cls} value={form.gender} onChange={e=>setForm(s=>({...s,gender:e.target.value}))}><option value="">Sin género</option><option value="Men">Hombre</option><option value="Women">Mujer</option><option value="Unisex">Unisex</option><option value="Kids">Niños</option></select><div className="flex gap-3 pt-2"><button type="button" onClick={onClose} className="flex-1 py-3 border border-gray-200 dark:border-gray-700 rounded-xl font-semibold text-gray-600 dark:text-gray-400">Cancelar</button><button type="submit" disabled={loading} className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold">{loading?'...':'Guardar'}</button></div></form></div></div>);
 }

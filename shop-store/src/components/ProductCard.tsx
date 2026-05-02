@@ -23,14 +23,14 @@ export default function ProductCard({ product }: Props) {
   return (
     <div
       onClick={() => navigate(`/product/${product.id}`)}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-100"
+      className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-md dark:hover:shadow-gray-900/50 transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-100 dark:border-gray-800"
     >
       <div className="h-56 relative overflow-hidden" style={{ backgroundColor: bgColor + '20' }}>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-32 h-32 rounded-full" style={{ backgroundColor: bgColor, opacity: 0.3 }} />
         </div>
         <div className="absolute bottom-3 left-3">
-          <span className="text-xs font-medium bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full text-gray-700">
+          <span className="text-xs font-medium bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">
             {product.categoryName || 'Ropa'}
           </span>
         </div>
@@ -41,10 +41,10 @@ export default function ProductCard({ product }: Props) {
         )}
       </div>
       <div className="p-4">
-        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{product.brand || 'UrbanStyle'}</p>
-        <h3 className="font-semibold text-gray-900 mt-1 truncate">{product.name}</h3>
+        <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wide">{product.brand || 'UrbanStyle'}</p>
+        <h3 className="font-semibold text-gray-900 dark:text-white mt-1 truncate">{product.name}</h3>
         <div className="flex items-center justify-between mt-3">
-          <span className="text-xl font-bold text-indigo-600">${product.price.toFixed(2)}</span>
+          <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">${product.price.toFixed(2)}</span>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/product/${product.id}`); }}
             className="flex items-center gap-1 bg-indigo-600 text-white px-3 py-1.5 rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors"
@@ -55,7 +55,7 @@ export default function ProductCard({ product }: Props) {
         {product.sizes && product.sizes.length > 0 && (
           <div className="flex gap-1 mt-3">
             {product.sizes.slice(0, 4).map(s => (
-              <span key={s.size} className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">
+              <span key={s.size} className="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-1.5 py-0.5 rounded font-medium">
                 {s.size}
               </span>
             ))}
