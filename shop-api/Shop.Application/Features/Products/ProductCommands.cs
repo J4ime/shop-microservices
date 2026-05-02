@@ -68,6 +68,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Produc
         product.Brand = cmd.Dto.Brand;
         product.Material = cmd.Dto.Material;
         product.Color = cmd.Dto.Color;
+        product.ImageUrl = cmd.Dto.ImageUrl;
         product.CategoryId = cmd.Dto.CategoryId;
         product.TotalStock = cmd.Dto.Sizes.Sum(s => s.Stock);
         product.UpdatedAt = DateTime.UtcNow;

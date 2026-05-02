@@ -17,7 +17,7 @@ public class MappingProfile : Profile
             .ConstructUsing(src => new ProductResponse(
                 src.Id, src.Name, src.Description, src.Sku,
                 src.Price, src.CostPrice, src.TotalStock,
-                src.Status, src.Brand, src.Material, src.Color,
+                src.Status, src.Brand, src.Material, src.Color, src.ImageUrl,
                 src.CategoryId, src.Category != null ? src.Category.Name : "",
                 src.Sizes.Select(s => new ProductSizeResponse(s.Id, s.Size, s.Stock)).ToList(),
                 src.CreatedAt, src.UpdatedAt));

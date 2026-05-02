@@ -14,6 +14,7 @@ public class Product : BaseEntity
     public string? Brand { get; set; }
     public string? Material { get; set; }
     public string? Color { get; set; }
+    public string? ImageUrl { get; set; }
     public Guid CategoryId { get; set; }
     public Category Category { get; set; } = null!;
     public ICollection<ProductSize> Sizes { get; set; } = new List<ProductSize>();

@@ -64,7 +64,7 @@ main header .count{color:#8b949e;font-size:11px}
   </footer>
 </aside>
 <main>
-  <header><span id="title">Shop API</span><span id="live" style="color:#10b981;font-size:10px;font-weight:600">● LIVE</span><span class="count" id="count">0 líneas</span></header>
+  <header><span id="title">Shop API</span><input type="text" id="searchInput" placeholder="Buscar en logs..." oninput="filterLogs()" style="background:#161b22;border:1px solid #30363d;border-radius:6px;padding:4px 10px;color:#c9d1d9;font:11px inherit;width:200px;outline:none"><span id="live" style="color:#10b981;font-size:10px;font-weight:600">● LIVE</span><span class="count" id="count">0 líneas</span></header>
   <div id="log"><div class="no-logs">Esperando logs...</div></div>
 </main>
 <script>
@@ -116,6 +116,12 @@ function connect(service){
 function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function changeLevel(l){currentLevel=l;reconnect();}
 function reconnect(){if(!paused)connect(selected);}
+function filterLogs(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('#log .line').forEach(el=>{
+    el.style.display = !q || el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
 
 const nav=document.getElementById('nav');
 const tail=document.getElementById('tailSelect');

@@ -16,3 +16,12 @@ docker-compose.override.yml
 *~
 .idea/
 *.sln.iml
+
+## Node
+node_modules/
+package-lock.json
+
+## Test artifacts
+test-results*.txt
+*.log
+HashGen/

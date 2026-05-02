@@ -31,9 +31,9 @@ export default function ProductDetail() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid md:grid-cols-2 gap-12">
-        <div className="rounded-3xl h-96 md:h-[500px] flex items-center justify-center" style={{ backgroundColor: bgColor + '15' }}>
-          <div className="w-48 h-48 rounded-full" style={{ backgroundColor: bgColor, opacity: 0.3 }} />
-        </div>
+        <div className="rounded-3xl h-96 md:h-[500px] overflow-hidden bg-gray-100 dark:bg-gray-800">
+          <img src={product.imageUrl || `https://picsum.photos/seed/${product.id.replace(/-/g,'').slice(0,8)}/800/1000`} alt={product.name}
+            className="w-full h-full object-cover" />
         <div>
           <p className="text-sm text-indigo-600 dark:text-indigo-400 font-semibold uppercase tracking-wide">{product.brand || 'UrbanStyle'}</p>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{product.name}</h1>

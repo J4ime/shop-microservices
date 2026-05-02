@@ -43,6 +43,9 @@ public class CreateProductValidator : AbstractValidator<CreateProductDto>
         RuleFor(x => x.Color)
             .MaximumLength(50).When(x => !string.IsNullOrEmpty(x.Color));
 
+        RuleFor(x => x.ImageUrl)
+            .MaximumLength(2000).When(x => !string.IsNullOrEmpty(x.ImageUrl));
+
         RuleFor(x => x.CategoryId)
             .NotEmpty().WithMessage("Category is required.");
 
