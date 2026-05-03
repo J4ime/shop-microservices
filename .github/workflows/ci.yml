@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
       - run: dotnet restore Shop.sln
       - run: dotnet test Shop.UnitTests/Shop.UnitTests.csproj --no-restore --verbosity normal
       - name: Auth Tests
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm ci
+      - run: npm install --legacy-peer-deps
       - run: npm test
 
   frontend-backoffice-tests:
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm ci
+      - run: npm install --legacy-peer-deps
       - run: npm test
 
   frontend-builds:
@@ -68,5 +68,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: cd shop-store && npm ci && npm run build
-      - run: cd shop-backoffice && npm ci && npm run build
+      - run: cd shop-store && npm install --legacy-peer-deps && npm run build
+      - run: cd shop-backoffice && npm install --legacy-peer-deps && npm run build
