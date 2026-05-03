@@ -1,0 +1,21 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1777829132105,60,GET Validate Token,200,OK,01 - Auth Flow 1-1,text,true,,192,168,1,1,http://localhost:6001/api/auth/validate,60,0,8
+1777829132239,37,GET Profile,401,Unauthorized,01 - Auth Flow 1-1,,false,"Test failed: code expected to equal /
+
+****** received  : [[[401]]]
+
+****** comparison: [[[200]]]
+
+/",169,162,1,1,http://localhost:6001/api/auth/me,37,0,11
+1777829141985,177,GET All Categories,200,OK,02 - Shop Categories 2-1,text,true,,1867,126,1,1,http://localhost:5000/api/categories,176,0,14
+1777829143394,103,GET Category by ID,200,OK,02 - Shop Categories 2-1,text,true,,396,163,1,1,http://localhost:5000/api/categories/c1d2e3f4-1001-4000-8000-000000000001,102,0,6
+1777829143540,73,GET All Products,200,OK,03 - Shop Products 3-1,text,true,,5089,124,1,1,http://localhost:5000/api/products,72,0,13
+1777829143614,48,GET Products by Category,200,OK,03 - Shop Products 3-1,text,true,,2588,172,1,1,http://localhost:5000/api/products?categoryId=c1d2e3f4-1001-4000-8000-000000000001,47,0,3
+1777829144022,105,GET All Products,200,OK,03 - Shop Products 3-2,text,true,,5089,124,1,1,http://localhost:5000/api/products,104,0,4
+1777829144129,73,GET Products by Category,200,OK,03 - Shop Products 3-2,text,true,,2588,172,1,1,http://localhost:5000/api/products?categoryId=c1d2e3f4-1001-4000-8000-000000000001,71,0,10
+1777829144228,792,POST Admin Login,200,OK,04 - Shop Orders 4-1,text,true,,1188,240,1,1,http://localhost:6001/api/auth/login,791,0,6
+1777829145096,179,GET All Orders,200,OK,04 - Shop Orders 4-1,text,true,,1851,938,1,1,http://localhost:5000/api/orders,178,0,61
+1777829145295,177,GET Non-existent Product (404),404,Not Found,05 - Negative Tests 5-1,text,true,,300,161,1,1,http://localhost:5000/api/products/00000000-0000-4000-8000-999999999999,176,0,3
+1777829145486,136,POST Login Invalid (401),401,Unauthorized,05 - Negative Tests 5-1,text,true,,261,241,1,1,http://localhost:6001/api/auth/login,136,0,24
+1777829145624,62,POST Create Product No Auth (401),401,Unauthorized,05 - Negative Tests 5-1,,true,,147,259,1,1,http://localhost:5000/api/products,62,0,32
+1777829145690,31,POST Register Bad Email (400),400,Bad Request,05 - Negative Tests 5-1,text,true,,745,278,1,1,http://localhost:6001/api/auth/register,29,0,7

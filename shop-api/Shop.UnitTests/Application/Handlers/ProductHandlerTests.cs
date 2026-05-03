@@ -29,7 +29,7 @@ public class ProductHandlerTests
 
         var handler = new CreateProductHandler(_repoMock.Object, _uowMock.Object, _mapper);
         var dto = new CreateProductDto("Test", "Valid description here", "SKU-001",
-            100, 50, 10, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
+            100, 50, 10, null, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
 
         await handler.Invoking(h => h.Handle(new CreateProductCommand(dto), CancellationToken.None))
             .Should().ThrowAsync<AlreadyExistsException>();
@@ -45,7 +45,7 @@ public class ProductHandlerTests
 
         var handler = new CreateProductHandler(_repoMock.Object, _uowMock.Object, _mapper);
         var dto = new CreateProductDto("Test Product", "Valid description here", "SKU-002",
-            100, 50, 10, "BrandX", "Cotton", "Blue", Guid.NewGuid(),
+            100, 50, 10, "BrandX", "Cotton", "Blue", null, Guid.NewGuid(),
             [new(Size.M, 10)]);
 
         var result = await handler.Handle(new CreateProductCommand(dto), CancellationToken.None);
@@ -65,7 +65,7 @@ public class ProductHandlerTests
 
         var handler = new UpdateProductHandler(_repoMock.Object, _uowMock.Object, _mapper);
         var dto = new UpdateProductDto("Test", "Valid description here",
-            100, 50, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
+            100, 50, null, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
 
         await handler.Invoking(h => h.Handle(
                 new UpdateProductCommand(Guid.NewGuid(), dto), CancellationToken.None))
@@ -87,7 +87,7 @@ public class ProductHandlerTests
 
         var handler = new UpdateProductHandler(_repoMock.Object, _uowMock.Object, _mapper);
         var dto = new UpdateProductDto("Updated", "Valid description here",
-            100, 50, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
+            100, 50, null, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
 
         var result = await handler.Handle(
             new UpdateProductCommand(product.Id, dto), CancellationToken.None);

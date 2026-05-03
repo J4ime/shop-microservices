@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1777828135677,9132,GET Products,200,OK,Simple Test 1-1,text,true,,5089,124,1,1,http://localhost:5000/api/products,9091,0,173
