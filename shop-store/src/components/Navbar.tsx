@@ -25,27 +25,27 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <Link to="/" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">{t('nav.store')}</Link>
+            <Link to="/" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">{t('nav__store')}</Link>
 
             {isAuthenticated ? (
               <>
                 <Link to="/orders" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-1">
-                  <Package size={16} /> {t('nav.orders')}
+                  <Package size={16} /> {t('nav__orders')}
                 </Link>
-                <span className="text-sm text-gray-400 dark:text-gray-500 hidden sm:inline">{t('nav.hello')}, {user?.firstName}</span>
+                <span className="text-sm text-gray-400 dark:text-gray-500 hidden sm:inline">{t('nav__hello')}, {user?.firstName}</span>
                 <button onClick={logout} className="text-sm text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1">
-                  <LogOut size={16} /> {t('nav.logout')}
+                  <LogOut size={16} /> {t('nav__logout')}
                 </button>
               </>
             ) : (
               <Link to="/login" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-1">
-                <User size={16} /> {t('nav.login')}
+                <User size={16} /> {t('nav__login')}
               </Link>
             )}
 
             <LanguageSwitcher />
 
-            <button onClick={toggle} className="p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}>
+            <button onClick={toggle} className="p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" title={theme === 'light' ? t('navbar__darkMode') : t('navbar__lightMode')}>
               {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
             </button>
 

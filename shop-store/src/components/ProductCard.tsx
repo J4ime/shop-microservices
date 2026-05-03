@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
+import { useTranslation } from '../i18n';
 
 interface Props {
   product: {
@@ -11,7 +12,6 @@ interface Props {
 
 function getImageUrl(p: Props['product']) {
   if (p.imageUrl) return p.imageUrl;
-  // Category-specific seed for consistent, relevant images
   const catSeeds: Record<string, number> = {
     'Camisetas': 10, 'Pantalones': 20, 'Vestidos': 30, 'Chaquetas': 40,
     'Zapatos': 50, 'Accesorios': 60, 'Ropa Deportiva': 70, 'Ropa Infantil': 80,
@@ -24,6 +24,7 @@ function getImageUrl(p: Props['product']) {
 }
 
 export default function ProductCard({ product }: Props) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const img = getImageUrl(product);
 
@@ -34,10 +35,10 @@ export default function ProductCard({ product }: Props) {
         <img src={img} alt={product.name} loading="lazy"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute bottom-3 left-3">
-          <span className="text-xs font-medium bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">{product.categoryName || 'Ropa'}</span>
+          <span className="text-xs font-medium bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">{product.categoryName || t('productCard__category')}</span>
         </div>
         {product.totalStock <= 10 && product.totalStock > 0 && (
-          <div className="absolute top-3 right-3 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full">¡Últimas!</div>
+          <div className="absolute top-3 right-3 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full">{t('productCard__lastUnits')}</div>
         )}
       </div>
       <div className="p-4">
@@ -47,7 +48,7 @@ export default function ProductCard({ product }: Props) {
           <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">${product.price.toFixed(2)}</span>
           <button onClick={(e) => { e.stopPropagation(); navigate(`/product/${product.id}`); }}
             className="flex items-center gap-1 bg-indigo-600 text-white px-3 py-1.5 rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors">
-            <ShoppingCart size={14} /> Comprar
+            <ShoppingCart size={14} /> {t('product__buy')}
           </button>
         </div>
         {product.sizes && product.sizes.length > 0 && (
