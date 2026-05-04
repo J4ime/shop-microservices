@@ -7,10 +7,20 @@ using Shop.Api.Middleware;
 using Shop.Infrastructure.Data;
 using System.Text;
 
+var ddApiKey = Environment.GetEnvironmentVariable("DD_API_KEY") ?? "";
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
+    .Enrich.WithProperty("service", "shop-api")
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.DatadogLogs(
+        ddApiKey,
+        source: "csharp",
+        service: "shop-api",
+        host: Environment.GetEnvironmentVariable("DD_HOST") ?? "shop-api",
+        new string[] { "env:development" },
+        configuration: new Serilog.Sinks.Datadog.Logs.DatadogConfiguration(
+            Environment.GetEnvironmentVariable("DD_SITE") ?? "datadoghq.com"))
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);

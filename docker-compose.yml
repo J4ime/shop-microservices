@@ -54,6 +54,16 @@ services:
       - Jwt__Audience=shop-services
       - Jwt__AccessTokenExpiryMinutes=60
       - Jwt__RefreshTokenExpiryDays=7
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=${DD_SITE:-datadoghq.com}
+      - DD_HOST=auth-api
+      - DD_ENV=development
+      - DD_SERVICE=auth-api
+      - DD_TRACE_AGENT_URL=http://datadog:8126
+      - CORECLR_ENABLE_PROFILING=1
+      - CORECLR_PROFILER={846F5F1C-F9AE-4B07-969E-05C26BC060D8}
+      - CORECLR_PROFILER_PATH=/opt/datadog/Datadog.Trace.ClrProfiler.Native.so
+      - DD_DOTNET_TRACER_HOME=/opt/datadog
     depends_on:
       auth-db:
         condition: service_healthy
@@ -74,6 +84,16 @@ services:
       - Jwt__Audience=shop-services
       - Jwt__Key=AuthDefaultKey1234567890!@#$%^&*()
       - AuthService__ValidationUrl=http://auth-api:8080/api/auth/validate
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=${DD_SITE:-datadoghq.com}
+      - DD_HOST=shop-api
+      - DD_ENV=development
+      - DD_SERVICE=shop-api
+      - DD_TRACE_AGENT_URL=http://datadog:8126
+      - CORECLR_ENABLE_PROFILING=1
+      - CORECLR_PROFILER={846F5F1C-F9AE-4B07-969E-05C26BC060D8}
+      - CORECLR_PROFILER_PATH=/opt/datadog/Datadog.Trace.ClrProfiler.Native.so
+      - DD_DOTNET_TRACER_HOME=/opt/datadog
     depends_on:
       postgres:
         condition: service_healthy
@@ -94,9 +114,35 @@ services:
     networks:
       - shop-network
 
+  datadog:
+    image: datadog/agent:latest
+    container_name: datadog-agent
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=${DD_SITE:-datadoghq.com}
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_ENV=development
+      - DD_SERVICE=shop
+      - DD_CONTAINER_EXCLUDE=name:datadog-agent
+    ports:
+      - "8126:8126"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup/:ro
+      - datadog-data:/opt/datadog-agent/run
+    networks:
+      - shop-network
+
 volumes:
   postgres-data:
   auth-data:
+  datadog-data:
 
 networks:
   shop-network:

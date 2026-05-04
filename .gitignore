@@ -11,6 +11,9 @@ appsettings.*.local.json
 ## Docker
 docker-compose.override.yml
 
+## Environment
+.env
+
 ## IDE
 *.swp
 *~

@@ -7,10 +7,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
+var ddApiKey = Environment.GetEnvironmentVariable("DD_API_KEY") ?? "";
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
+    .Enrich.WithProperty("service", "auth-api")
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.DatadogLogs(
+        ddApiKey,
+        source: "csharp",
+        service: "auth-api",
+        host: Environment.GetEnvironmentVariable("DD_HOST") ?? "auth-api",
+        new string[] { "env:development" },
+        configuration: new Serilog.Sinks.Datadog.Logs.DatadogConfiguration(
+            Environment.GetEnvironmentVariable("DD_SITE") ?? "datadoghq.com"))
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);

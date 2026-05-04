@@ -27,27 +27,79 @@ app.get('/api/containers', async (_req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+const TS_RE = /(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)/;
+
+function classifyLine(text) {
+  if (/ERR/i.test(text)) return 'ERROR';
+  if (/WRN|WARN/i.test(text)) return 'WARN';
+  if (/INF|INFO/i.test(text)) return 'INFO';
+  if (/DBG|DEBUG|TRCE|TRACE/i.test(text)) return 'DEBUG';
+  if (/HTTP|Executed|Executing|Request (start|finish)/i.test(text)) return 'HTTP';
+  if (/SQL|Command|DbCommand|Executed DbCommand/i.test(text)) return 'SQL';
+  return 'UNKNOWN';
+}
+
+function cleanLine(line) {
+  let text = line;
+  for (let i = 0; i < 5; i++) {
+    text = text.replace(/^[\x00-\x08\x0B\x0C\x0E-\x1F]+/g, '').trimStart();
+  }
+  return text;
+}
+
+function stripTs(line) {
+  const text = cleanLine(line);
+  const m = text.match(TS_RE);
+  if (!m) return { ts: null, text };
+  const ts = new Date(m[1]);
+  const clean = cleanLine(text.slice(m.index + m[0].length));
+  return { ts, text: clean || text.slice(m.index + m[0].length).trim() };
+}
+
+function parseLogs(data, service) {
+  return data.split('\n').filter(Boolean).map(line => {
+    const { ts, text } = stripTs(line);
+    const level = classifyLine(text);
+    return { service, level, message: text, time: ts ? ts.toISOString() : null, ts: ts ? ts.getTime() : null };
+  });
+}
+
 app.get('/api/logs/:name', async (req, res) => {
   try {
-    const container = docker.getContainer(req.params.name);
+    const service = req.params.name;
+    const container = docker.getContainer(service);
     const tail = parseInt(req.query.tail) || 500;
-    const stream = await container.logs({ stdout: true, stderr: true, tail, timestamps: true, follow: false });
-    let data = '';
-    stream.on('data', chunk => { data += chunk.toString('utf8'); });
-    stream.on('end', () => {
-      const lines = data.split('\n').filter(Boolean).map(line => {
-        let level = 'UNKNOWN';
-        if (/ERR/i.test(line)) level = 'ERROR';
-        else if (/WRN|WARN/i.test(line)) level = 'WARN';
-        else if (/INF|INFO/i.test(line)) level = 'INFO';
-        else if (/DBG|DEBUG|TRCE|TRACE/i.test(line)) level = 'DEBUG';
-        else if (/HTTP|Executed|Executing|Request (start|finish)/i.test(line)) level = 'HTTP';
-        else if (/SQL|Command|DbCommand|Executed DbCommand/i.test(line)) level = 'SQL';
-        return { level, message: line };
+    const since = req.query.since ? parseInt(req.query.since) : undefined;
+    const until = req.query.until ? parseInt(req.query.until) : undefined;
+    const sinceMs = req.query.sinceMin ? parseInt(req.query.sinceMin) : null;
+    const untilMs = req.query.untilMax ? parseInt(req.query.untilMax) : null;
+
+    const opts = { stdout: true, stderr: true, tail, timestamps: true, follow: false };
+    if (since) opts.since = since;
+    if (until) opts.until = until;
+
+    const logs = await container.logs(opts);
+    const data = Buffer.isBuffer(logs) ? logs.toString('utf8') : logs;
+    const parsed = parseLogs(data, service);
+
+    let result = parsed;
+    if (sinceMs || untilMs) {
+      result = parsed.filter(p => {
+        if (p.ts === null) return false;
+        if (sinceMs && p.ts < sinceMs) return false;
+        if (untilMs && p.ts > untilMs) return false;
+        return true;
       });
-      res.json(lines);
+    }
+
+    result.sort((a, b) => {
+      if (a.ts === null && b.ts === null) return 0;
+      if (a.ts === null) return 1;
+      if (b.ts === null) return -1;
+      return b.ts - a.ts;
     });
-    stream.on('error', () => res.status(500).json({ error: 'Stream error' }));
+
+    res.json(result.map(({ ts: _ts, ...rest }) => rest));
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -55,27 +107,26 @@ wss.on('connection', (ws, req) => {
   const url = new URL(req.url, 'http://localhost');
   const service = url.searchParams.get('service');
   const levelFilter = url.searchParams.get('level') || '';
+  const since = url.searchParams.get('since');
   if (!service) { ws.close(); return; }
 
   const streamLogs = async () => {
     try {
       const container = docker.getContainer(service);
-      const stream = await container.logs({ stdout: true, stderr: true, tail: 200, timestamps: true, follow: true });
+      const opts = { stdout: true, stderr: true, tail: 200, timestamps: true, follow: true };
+      if (since) opts.since = parseInt(since);
+
+      const stream = await container.logs(opts);
       stream.on('data', (chunk) => {
         let text = chunk.toString('utf8').replace(/^[\x00-\x08\x0B\x0C\x0E-\x1F]+/, '').trim();
         if (!text) return;
 
-        let level = 'UNKNOWN';
-        if (/ERR/i.test(text)) level = 'ERROR';
-        else if (/WRN|WARN/i.test(text)) level = 'WARN';
-        else if (/INF|INFO/i.test(text)) level = 'INFO';
-        else if (/DBG|DEBUG|TRCE|TRACE/i.test(text)) level = 'DEBUG';
-        else if (/HTTP|Executed|Executing|Request (start|finish)/i.test(text)) level = 'HTTP';
-        else if (/SQL|Command|DbCommand/i.test(text)) level = 'SQL';
+        const { ts, text: clean } = stripTs(text);
+        const level = classifyLine(clean);
 
         if (levelFilter && levelFilter !== 'ALL' && level !== levelFilter) return;
 
-        ws.send(JSON.stringify({ service, level, message: text }));
+        ws.send(JSON.stringify({ service, level, message: clean, time: ts ? ts.toISOString() : null, ts: ts ? ts.getTime() : null }));
       });
       stream.on('error', () => {});
       ws.on('close', () => stream.destroy());
@@ -86,4 +137,4 @@ wss.on('connection', (ws, req) => {
 });
 
 const PORT = 7000;
-server.listen(PORT, () => console.log(`Logs portal on http://localhost:${PORT}`));
+server.listen(PORT, () => console.log('Logs portal on http://localhost:' + PORT));
