@@ -68,5 +68,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: cd shop-store && npm install --legacy-peer-deps && npm run build
-      - run: cd shop-backoffice && npm install --legacy-peer-deps && npm run build
+      - name: Build shop-store
+        working-directory: shop-store
+        run: npm install --legacy-peer-deps && npm run build
+      - name: Build shop-backoffice
+        working-directory: shop-backoffice
+        run: npm install --legacy-peer-deps && npm run build
