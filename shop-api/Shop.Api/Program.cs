@@ -1,26 +1,22 @@
+using System.Net.Http.Json;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using Shop.Api.Extensions;
 using Shop.Api.Middleware;
 using Shop.Infrastructure.Data;
-using System.Text;
 
-var ddApiKey = Environment.GetEnvironmentVariable("DD_API_KEY") ?? "";
+var seqUrl = Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341";
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
     .Enrich.WithProperty("service", "shop-api")
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
-    .WriteTo.DatadogLogs(
-        ddApiKey,
-        source: "csharp",
-        service: "shop-api",
-        host: Environment.GetEnvironmentVariable("DD_HOST") ?? "shop-api",
-        new string[] { "env:development" },
-        configuration: new Serilog.Sinks.Datadog.Logs.DatadogConfiguration(
-            Environment.GetEnvironmentVariable("DD_SITE") ?? "datadoghq.com"))
+    .WriteTo.Sink(new SeqHttpSink(seqUrl))
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -121,3 +117,32 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public sealed class SeqHttpSink(string seqUrl) : ILogEventSink
+{
+    private static readonly HttpClient _client = new();
+
+    public void Emit(LogEvent logEvent)
+    {
+        try
+        {
+            var body = new
+            {
+                Events = new[]
+                {
+                    new
+                    {
+                        Timestamp = logEvent.Timestamp.UtcDateTime.ToString("o"),
+                        Level = logEvent.Level.ToString(),
+                        MessageTemplate = logEvent.RenderMessage(),
+                        Properties = logEvent.Properties.ToDictionary(
+                            p => p.Key,
+                            p => (object)p.Value.ToString())
+                    }
+                }
+            };
+            _client.PostAsJsonAsync($"{seqUrl}/api/events/raw", body);
+        }
+        catch { }
+    }
+}

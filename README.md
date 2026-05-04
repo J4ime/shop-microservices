@@ -27,7 +27,6 @@ shop-microservices/
 ├── shop-auth/         🔐  Microservicio Auth (.NET 10 - JWT + BCrypt)
 ├── shop-store/        🛒  Tienda online (React 19 + Vite + Tailwind)
 ├── shop-backoffice/   ⚙️  Panel de administración (React 19 + Vite + Tailwind)
-├── shop-logs/         📊  Portal de logs en tiempo real (Express + WebSocket)
 ├── sql/               🗄️  Scripts DDL + seed data
 ├── postman/           📮  Colecciones Postman
 ├── jmeter/            📈  Plan de regresión JMeter
@@ -61,7 +60,7 @@ shop-microservices/
 | **Auto-creación de esquema** | `EnsureCreated()` + `ALTER TABLE IF NOT EXISTS` al iniciar |
 | **Soft delete** | Filtro global `IsDeleted` en todas las consultas EF Core |
 | **Token validation** | JWT con validación local de clave compartida entre servicios |
-| **Logging estructurado** | Serilog con timestamp, nivel y contexto |
+| **Logging estructurado** | Serilog con salida a consola y Seq (dashboard de logs) |
 | **Imágenes auto-generadas** | Fallback a picsum.photos con seed por categoría de producto |
 | **Detección de idioma** | i18next con detector de navegador y persistencia en localStorage |
 
@@ -88,14 +87,15 @@ shop-microservices/
 | **Clientes** | Tarjetas con datos de contacto y pedidos |
 | **Pedidos** | Acordeón expandible, cambio de estado (Confirmar → Enviar → Entregar → Cancelar) |
 
-### Portal de Logs (`http://localhost:7000`)
-| Funcionalidad | Descripción |
-|---------------|-------------|
-| **Streaming live** | WebSocket con Docker socket para logs en tiempo real |
-| **Filtro por nivel** | ERROR, WARN, INFO, HTTP, SQL, DEBUG, UNKNOWN |
-| **Buscador** | Filtra líneas en tiempo real por contenido textual |
-| **Selector de servicio** | Shop API, Auth API, Shop DB, Auth DB |
-| **Badges** | Colores por nivel de log (rojo=error, amarillo=warn, azul=info) |
+### Logging & Monitoreo
+
+| Herramienta | Descripción |
+|-------------|-------------|
+| **Seq** | Dashboard centralizado de logs estructurados en `http://localhost:8081` |
+| **Serilog** | Logging estructurado en APIs .NET (consola + HTTP a Seq) |
+| **Frontend Logger** | Logs del navegador enviados a Seq vía HTTP (batching cada 2s) |
+
+Todos los logs — APIs, base de datos (EF Core SQL), y frontend — se consolidan en Seq con búsqueda y filtros en tiempo real.
 
 ---
 
@@ -105,7 +105,6 @@ shop-microservices/
 |-----|--------|--------|--------|--------|
 | **Store** | ✅ | ✅ | ✅ | ✅ |
 | **Backoffice** | ✅ | ✅ | ✅ | ✅ |
-| **Logs** | N/A (técnico) | — | — | — |
 
 Framework: `react-i18next` + `i18next-browser-languagedetector`. El idioma se detecta del navegador y persiste en `localStorage`. Selector de idioma 🌐 en Navbar (Store) y Sidebar (Backoffice).
 
@@ -119,7 +118,7 @@ Framework: `react-i18next` + `i18next-browser-languagedetector`. El idioma se de
 | `auth-api` | .NET 10 ASP.NET Core | `6001` |
 | `shop-postgres` | PostgreSQL 16 Alpine | `5432` |
 | `auth-postgres` | PostgreSQL 16 Alpine | `5433` |
-| `shop-logs` | Node.js 22 + Express + WebSocket | `7000` |
+| `seq` | Seq (log dashboard) | `8081` |
 
 ---
 
@@ -213,7 +212,7 @@ cd shop-backoffice && npm install --legacy-peer-deps && npm run dev
 # 5. Acceder
 # 🛒 Tienda:      http://localhost:3000
 # ⚙️ Backoffice:  http://localhost:4000  (admin@shop.com / Test1234!)
-# 📊 Logs:         http://localhost:7000
+# 📊 Seq Logs:    http://localhost:8081
 # 📖 Swagger Shop: http://localhost:5000/swagger
 # 🔐 Swagger Auth: http://localhost:6001/swagger
 ```
@@ -231,7 +230,7 @@ cd shop-backoffice && npm install --legacy-peer-deps && npm run dev
 | **i18n** | react-i18next, i18next-browser-languagedetector |
 | **Testing** | xUnit, Moq, FluentAssertions, Vitest, Testing Library, JMeter |
 | **Infraestructura** | Docker, Docker Compose, GitHub Actions |
-| **Logs** | Serilog, Express, WebSocket, Dockerode |
+| **Logs** | Serilog, Seq |
 
 ---
 

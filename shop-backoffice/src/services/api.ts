@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logger } from './logger';
 
 const authAxios = axios.create({ baseURL: 'http://localhost:6001/api' });
 const api = axios.create({ baseURL: 'http://localhost:5000/api' });
@@ -12,6 +13,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    logger.error('API request failed', {
+      url: error.config?.url,
+      method: error.config?.method?.toUpperCase(),
+      status: error.response?.status,
+      message: error.response?.data?.error?.message ?? error.message,
+    });
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';
@@ -23,6 +30,12 @@ api.interceptors.response.use(
 authAxios.interceptors.response.use(
   (response) => response,
   (error) => {
+    logger.error('Auth API request failed', {
+      url: error.config?.url,
+      method: error.config?.method?.toUpperCase(),
+      status: error.response?.status,
+      message: error.response?.data?.error ?? error.message,
+    });
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';

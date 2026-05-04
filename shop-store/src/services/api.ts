@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logger } from './logger';
 
 const api = axios.create({ baseURL: 'http://localhost:5000/api' });
 
@@ -7,6 +8,19 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    logger.error('API request failed', {
+      url: error.config?.url,
+      method: error.config?.method?.toUpperCase(),
+      status: error.response?.status,
+      message: error.response?.data?.error?.message ?? error.message,
+    });
+    return Promise.reject(error);
+  }
+);
 
 export const authApi = {
   login: (email: string, password: string) =>
