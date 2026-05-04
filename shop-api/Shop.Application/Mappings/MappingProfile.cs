@@ -17,7 +17,7 @@ public class MappingProfile : Profile
             .ConstructUsing(src => new ProductResponse(
                 src.Id, src.Name, src.Description, src.Sku,
                 src.Price, src.CostPrice, src.TotalStock,
-                src.Status, src.Brand, src.Material, src.Color, src.ImageUrl,
+                src.Status, src.Gender, src.Brand, src.Material, src.Color, src.ImageUrl,
                 src.CategoryId, src.Category != null ? src.Category.Name : "",
                 src.Sizes.Select(s => new ProductSizeResponse(s.Id, s.Size, s.Stock)).ToList(),
                 src.CreatedAt, src.UpdatedAt));
@@ -28,7 +28,7 @@ public class MappingProfile : Profile
         CreateMap<UpdateCategoryDto, Category>();
         CreateMap<Category, CategoryResponse>()
             .ConstructUsing(src => new CategoryResponse(
-                src.Id, src.Name, src.Description, src.Gender,
+                src.Id, src.Name, src.Description,
                 src.Products != null ? src.Products.Count : 0, src.CreatedAt, src.UpdatedAt));
 
         CreateMap<CreateCustomerDto, Customer>();

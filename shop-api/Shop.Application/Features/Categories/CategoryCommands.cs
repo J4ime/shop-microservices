@@ -59,7 +59,6 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Cate
 
         category.Name = cmd.Dto.Name;
         category.Description = cmd.Dto.Description;
-        category.Gender = cmd.Dto.Gender;
         category.UpdatedAt = DateTime.UtcNow;
 
         await _repo.UpdateAsync(category, ct);

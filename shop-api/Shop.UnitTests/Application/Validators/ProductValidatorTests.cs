@@ -13,7 +13,7 @@ public class ProductValidatorTests
     private static CreateProductDto ValidCreateDto() => new(
         "Camiseta Test", "Descripción válida del producto", "SKU-001",
         100m, 50m, 100, "Brand", "Material", "Rojo",
-        null, Guid.NewGuid(), [new(Size.M, 50)]
+        null, Guid.NewGuid(), Gender.Unisex, [new(Size.M, 50)]
     );
 
     [Fact]
@@ -147,8 +147,8 @@ public class ProductValidatorTests
     public void UpdateProduct_ValidDto_ShouldPass()
     {
         var dto = new UpdateProductDto(
-            "Updated", "Description valid enough", 150m, 75m,
-            null, null, null, null, Guid.NewGuid(), [new(Size.L, 30)]
+            "Updated", "Description valid enough", "SKU-001", 150m, 75m, 30,
+            null, null, null, null, Guid.NewGuid(), Gender.Unisex, [new(Size.L, 30)]
         );
         var result = _updateValidator.Validate(dto);
         result.IsValid.Should().BeTrue();
@@ -158,8 +158,8 @@ public class ProductValidatorTests
     public void UpdateProduct_EmptySizes_ShouldFail()
     {
         var dto = new UpdateProductDto(
-            "Updated", "Description valid enough", 150m, 75m,
-            null, null, null, null, Guid.NewGuid(), []
+            "Updated", "Description valid enough", "SKU-001", 150m, 75m, 30,
+            null, null, null, null, Guid.NewGuid(), Gender.Unisex, []
         );
         var result = _updateValidator.Validate(dto);
         result.IsValid.Should().BeFalse();

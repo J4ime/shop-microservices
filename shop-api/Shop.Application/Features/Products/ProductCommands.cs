@@ -63,14 +63,16 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Produc
 
         product.Name = cmd.Dto.Name;
         product.Description = cmd.Dto.Description;
+        product.Sku = cmd.Dto.Sku;
         product.Price = cmd.Dto.Price;
         product.CostPrice = cmd.Dto.CostPrice;
+        product.TotalStock = cmd.Dto.TotalStock;
         product.Brand = cmd.Dto.Brand;
         product.Material = cmd.Dto.Material;
         product.Color = cmd.Dto.Color;
         product.ImageUrl = cmd.Dto.ImageUrl;
         product.CategoryId = cmd.Dto.CategoryId;
-        product.TotalStock = cmd.Dto.Sizes.Sum(s => s.Stock);
+        product.Gender = cmd.Dto.Gender;
         product.UpdatedAt = DateTime.UtcNow;
 
         product.Sizes.Clear();

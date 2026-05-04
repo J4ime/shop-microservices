@@ -21,6 +21,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.Color).HasMaxLength(50);
         builder.Property(x => x.ImageUrl).HasMaxLength(2000);
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
+        builder.Property(x => x.Gender).HasConversion<string>().HasMaxLength(20);
         builder.HasOne(x => x.Category).WithMany(c => c.Products)
             .HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
@@ -49,7 +50,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
         builder.HasIndex(x => x.Name).IsUnique().HasFilter("\"IsDeleted\" = false");
         builder.Property(x => x.Description).HasMaxLength(500);
-        builder.Property(x => x.Gender).HasConversion<string>().HasMaxLength(20);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

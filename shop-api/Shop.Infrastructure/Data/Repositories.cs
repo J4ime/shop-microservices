@@ -8,6 +8,12 @@ public class ProductRepository : EfRepository<Product>, IProductRepository
 {
     public ProductRepository(ApplicationDbContext context) : base(context) { }
 
+    public override async Task<Product?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        => await Context.Products
+            .Include(p => p.Sizes)
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, ct);
+
     public async Task<IReadOnlyList<Product>> GetByCategoryAsync(Guid categoryId, CancellationToken ct)
         => await Context.Products
             .Include(p => p.Category)

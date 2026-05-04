@@ -24,7 +24,7 @@ public class ProductsControllerTests
     {
         var response = new PagedResponse<ProductResponse>(
             [new(Guid.NewGuid(), "P1", "D", "SKU1", 100, 50, 10,
-                 ProductStatus.Active, null, null, null, null, Guid.NewGuid(), "Cat",
+                 ProductStatus.Active, Gender.Unisex, null, null, null, null, Guid.NewGuid(), "Cat",
                  [], DateTime.UtcNow, null)],
             1, 1, 10);
 
@@ -43,7 +43,7 @@ public class ProductsControllerTests
     {
         var product = new ProductResponse(
             Guid.NewGuid(), "Test", "Desc", "SKU", 100, 50, 10,
-            ProductStatus.Active, null, null, null, null, Guid.NewGuid(), "Cat",
+            ProductStatus.Active, Gender.Unisex, null, null, null, null, Guid.NewGuid(), "Cat",
             [], DateTime.UtcNow, null);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetProductByIdQuery>(), It.IsAny<CancellationToken>()))
@@ -58,14 +58,14 @@ public class ProductsControllerTests
     {
         var response = new ProductResponse(
             Guid.NewGuid(), "New", "Desc", "SKU", 100, 50, 10,
-            ProductStatus.Active, null, null, null, null, Guid.NewGuid(), "Cat",
+            ProductStatus.Active, Gender.Unisex, null, null, null, null, Guid.NewGuid(), "Cat",
             [], DateTime.UtcNow, null);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<CreateProductCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
 
         var dto = new CreateProductDto("New", "Valid description here", "SKU",
-            100, 50, 10, null, null, null, null, Guid.NewGuid(), [new(Size.M, 10)]);
+            100, 50, 10, null, null, null, null, Guid.NewGuid(), Gender.Unisex, [new(Size.M, 10)]);
 
         var result = await _controller.Create(dto);
         result.Result.Should().BeOfType<CreatedAtActionResult>();

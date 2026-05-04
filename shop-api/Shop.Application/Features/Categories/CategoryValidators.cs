@@ -14,9 +14,6 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryDto>
 
         RuleFor(x => x.Description)
             .MaximumLength(500).When(x => !string.IsNullOrEmpty(x.Description));
-
-        RuleFor(x => x.Gender)
-            .IsInEnum().When(x => x.Gender.HasValue);
     }
 }
 
@@ -26,6 +23,5 @@ public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryDto>
     {
         RuleFor(x => x.Name).NotEmpty().MinimumLength(2).MaximumLength(100);
         RuleFor(x => x.Description).MaximumLength(500).When(x => !string.IsNullOrEmpty(x.Description));
-        RuleFor(x => x.Gender).IsInEnum().When(x => x.Gender.HasValue);
     }
 }

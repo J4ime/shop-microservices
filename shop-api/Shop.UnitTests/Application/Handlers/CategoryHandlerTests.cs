@@ -27,7 +27,7 @@ public class CategoryHandlerTests
             .ReturnsAsync(true);
 
         var handler = new CreateCategoryHandler(_repoMock.Object, _uowMock.Object, _mapper);
-        var cmd = new CreateCategoryCommand(new CreateCategoryDto("Test", null, null));
+        var cmd = new CreateCategoryCommand(new CreateCategoryDto("Test", null));
 
         await handler.Invoking(h => h.Handle(cmd, CancellationToken.None))
             .Should().ThrowAsync<AlreadyExistsException>();
@@ -42,7 +42,7 @@ public class CategoryHandlerTests
             .ReturnsAsync((Category c, CancellationToken _) => c);
 
         var handler = new CreateCategoryHandler(_repoMock.Object, _uowMock.Object, _mapper);
-        var cmd = new CreateCategoryCommand(new CreateCategoryDto("New", "Desc", null));
+        var cmd = new CreateCategoryCommand(new CreateCategoryDto("New", "Desc"));
 
         var result = await handler.Handle(cmd, CancellationToken.None);
 
@@ -57,7 +57,7 @@ public class CategoryHandlerTests
             .ReturnsAsync((Category?)null);
 
         var handler = new UpdateCategoryHandler(_repoMock.Object, _uowMock.Object, _mapper);
-        var cmd = new UpdateCategoryCommand(Guid.NewGuid(), new UpdateCategoryDto("X", null, null));
+        var cmd = new UpdateCategoryCommand(Guid.NewGuid(), new UpdateCategoryDto("X", null));
 
         await handler.Invoking(h => h.Handle(cmd, CancellationToken.None))
             .Should().ThrowAsync<NotFoundException>();

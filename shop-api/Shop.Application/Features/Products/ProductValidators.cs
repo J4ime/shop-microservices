@@ -75,8 +75,10 @@ public class UpdateProductValidator : AbstractValidator<UpdateProductDto>
     {
         RuleFor(x => x.Name).NotEmpty().MinimumLength(3).MaximumLength(200);
         RuleFor(x => x.Description).NotEmpty().MinimumLength(10).MaximumLength(2000);
+        RuleFor(x => x.Sku).NotEmpty().MaximumLength(50);
         RuleFor(x => x.Price).GreaterThan(0).LessThan(1000000);
         RuleFor(x => x.CostPrice).GreaterThan(0).LessThanOrEqualTo(x => x.Price);
+        RuleFor(x => x.TotalStock).GreaterThanOrEqualTo(0);
         RuleFor(x => x.CategoryId).NotEmpty();
         RuleFor(x => x.Sizes).NotEmpty();
         RuleForEach(x => x.Sizes).SetValidator(new ProductSizeValidator());
