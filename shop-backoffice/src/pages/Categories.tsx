@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'; import { categoriesApi } from '../s
 
 export default function Categories() {
   const { t } = useTranslation();
-  const [categories, setCategories] = useState<any[]>([]); const [modal, setModal] = useState<any>(null); const [loading, setLoading] = useState(true);
-  useEffect(() => { categoriesApi.getAll().then(r=>setCategories(r.data.data||[])).finally(()=>setLoading(false)); }, []);
+  const [categories, setCategories] = useState<any[]>([]); const [modal, setModal] = useState<any>(null);
+  useEffect(() => { categoriesApi.getAll().then(r=>setCategories(r.data.data||[])); }, []);
   const handleDelete = async (id: string) => { if(!confirm(t('categories__confirmDelete'))) return; await categoriesApi.delete(id); setCategories(p=>p.filter(x=>x.id!==id)); toast.success(t('categories__deleted')); };
 
   return (

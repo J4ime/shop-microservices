@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from '../i18n';
 import { Mail, Lock, User, Phone, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -13,7 +12,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: '', password: '', firstName: '', lastName: '', phone: '' });
   const { login, register } = useAuth();
-  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
