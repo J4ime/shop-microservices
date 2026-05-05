@@ -30,7 +30,7 @@ export default function ProductDetail() {
       </button>
       <div className="grid md:grid-cols-2 gap-10">
         <div className="rounded-xl overflow-hidden bg-base-100 dark:bg-base-900 aspect-[4/5]">
-          <img src={getProductImageUrl(product, 800, 1000)} alt={product.name} referrerPolicy="no-referrer"
+          <img src={getProductImageUrl(product, 800, 1000)} alt={product.name}
             className="w-full h-full object-cover" />
         </div>
         <div className="flex flex-col">

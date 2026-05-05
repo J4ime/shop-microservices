@@ -78,14 +78,14 @@ describe('Image URL generation', () => {
     expect(getProductImageUrl({ id: '1', name: 'Test', imageUrl: 'https://example.com/img.jpg' })).toBe('https://example.com/img.jpg');
   });
 
-  it('generates pollinations URL with product description', () => {
+  it('generates loremflickr URL with category and color keywords', () => {
     const url = getProductImageUrl({ id: 'abc123', name: 'Camiseta Algodón', categoryName: 'Camisetas', color: 'Roja' });
-    expect(url).toContain('image.pollinations.ai/prompt/');
+    expect(url).toContain('loremflickr.com');
     expect(url).toContain('600');
     expect(url).toContain('750');
-    expect(url).toContain('Roja');
-    expect(url).toContain('Camiseta');
-    expect(url).toContain('private=true');
+    expect(url).toContain('lock=');
+    expect(url).toContain('t-shirt');
+    expect(url).toContain('red');
   });
 
   it('same product returns same stable URL', () => {
