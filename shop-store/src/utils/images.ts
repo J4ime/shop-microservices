@@ -32,5 +32,5 @@ export function getProductImageUrl(product: ProductImageData, width = 600, heigh
   seed = Math.abs(seed);
 
   const encodedPrompt = encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
+  return `https://enter.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
 }
