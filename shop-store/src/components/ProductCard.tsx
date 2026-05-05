@@ -20,7 +20,7 @@ export default function ProductCard({ product }: Props) {
     <div onClick={() => navigate(`/product/${product.id}`)}
       className="group cursor-pointer overflow-hidden border border-base-200 dark:border-base-800 rounded-xl bg-white dark:bg-base-950 hover:border-base-300 dark:hover:border-base-700 transition-colors">
       <div className="h-56 relative overflow-hidden bg-base-100 dark:bg-base-900">
-        <img src={img} alt={product.name} loading="lazy"
+        <img src={img} alt={product.name} loading="lazy" referrerPolicy="no-referrer"
           className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
         {product.totalStock <= 10 && product.totalStock > 0 && (
           <div className="absolute top-3 left-3 bg-base-900 dark:bg-white text-white dark:text-base-900 text-[10px] font-semibold px-2 py-1 rounded uppercase tracking-wide">{t('productCard__lastUnits')}</div>
