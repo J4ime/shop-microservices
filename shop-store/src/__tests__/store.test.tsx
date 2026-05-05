@@ -1,3 +1,5 @@
+import { getProductImageUrl } from '../utils/images';
+
 // --- Pure logic tests (no React, no DOM) ---
 
 describe('Product filtering', () => {
@@ -72,28 +74,22 @@ describe('Cart logic', () => {
 });
 
 describe('Image URL generation', () => {
-  const getImageUrl = (product: any) => {
-    if (product.imageUrl) return product.imageUrl;
-    const catSeeds: Record<string, number> = { 'Camisetas': 10, 'Pantalones': 20, 'Vestidos': 30 };
-    const base = catSeeds[product.categoryName] || 1;
-    let hash = 0;
-    for (let i = 0; i < product.id.length; i++) hash = ((hash << 5) - hash) + product.id.charCodeAt(i) | 0;
-    return `https://picsum.photos/seed/${base + Math.abs(hash % 10)}/600/750`;
-  };
-
   it('returns custom URL if imageUrl is set', () => {
-    expect(getImageUrl({ imageUrl: 'https://example.com/img.jpg' })).toBe('https://example.com/img.jpg');
+    expect(getProductImageUrl({ id: '1', name: 'Test', imageUrl: 'https://example.com/img.jpg' })).toBe('https://example.com/img.jpg');
   });
 
-  it('generates picsum URL from product ID and category', () => {
-    const url = getImageUrl({ id: 'abc123', categoryName: 'Camisetas' });
-    expect(url).toContain('picsum.photos/seed/');
-    expect(url).toContain('/600/750');
+  it('generates pollinations URL with product description', () => {
+    const url = getProductImageUrl({ id: 'abc123', name: 'Camiseta Algodón', categoryName: 'Camisetas', color: 'Roja' });
+    expect(url).toContain('pollinations.ai/prompt/');
+    expect(url).toContain('600');
+    expect(url).toContain('750');
+    expect(url).toContain('Roja');
+    expect(url).toContain('Camiseta');
   });
 
   it('same product returns same stable URL', () => {
-    const a = getImageUrl({ id: 'fixed-id', categoryName: 'Pantalones' });
-    const b = getImageUrl({ id: 'fixed-id', categoryName: 'Pantalones' });
+    const a = getProductImageUrl({ id: 'fixed-id', name: 'Jeans', categoryName: 'Pantalones' });
+    const b = getProductImageUrl({ id: 'fixed-id', name: 'Jeans', categoryName: 'Pantalones' });
     expect(a).toBe(b);
   });
 });

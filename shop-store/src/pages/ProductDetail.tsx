@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { productsApi } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { useTranslation } from '../i18n';
+import { getProductImageUrl } from '../utils/images';
 import { ShoppingCart, Minus, Plus, Truck, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -29,7 +30,7 @@ export default function ProductDetail() {
       </button>
       <div className="grid md:grid-cols-2 gap-10">
         <div className="rounded-xl overflow-hidden bg-base-100 dark:bg-base-900 aspect-[4/5]">
-          <img src={product.imageUrl || `https://picsum.photos/seed/${product.id.replace(/-/g,'').slice(0,8)}/800/1000`} alt={product.name}
+          <img src={getProductImageUrl(product, 800, 1000)} alt={product.name}
             className="w-full h-full object-cover" />
         </div>
         <div className="flex flex-col">

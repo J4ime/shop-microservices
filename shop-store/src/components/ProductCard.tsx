@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useTranslation } from '../i18n';
+import { getProductImageUrl } from '../utils/images';
 
 interface Props {
   product: {
@@ -10,23 +11,10 @@ interface Props {
   };
 }
 
-function getImageUrl(p: Props['product']) {
-  if (p.imageUrl) return p.imageUrl;
-  const catSeeds: Record<string, number> = {
-    'Camisetas': 10, 'Pantalones': 20, 'Vestidos': 30, 'Chaquetas': 40,
-    'Zapatos': 50, 'Accesorios': 60, 'Ropa Deportiva': 70, 'Ropa Infantil': 80,
-  };
-  const base = catSeeds[p.categoryName || ''] || 1;
-  let hash = 0;
-  for (let i = 0; i < p.id.length; i++) hash = ((hash << 5) - hash) + p.id.charCodeAt(i) | 0;
-  const seed = base + Math.abs(hash % 10);
-  return `https://picsum.photos/seed/${seed}/600/750`;
-}
-
 export default function ProductCard({ product }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const img = getImageUrl(product);
+  const img = getProductImageUrl(product, 600, 750);
 
   return (
     <div onClick={() => navigate(`/product/${product.id}`)}
