@@ -12,41 +12,41 @@ export default function Cart() {
 
   if (items.length === 0) return (
     <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-      <ShoppingBag size={64} className="mx-auto text-gray-300 dark:text-gray-700 mb-4" />
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('cart__empty')}</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-8">{t('cart__emptyTagline')}</p>
-      <Link to="/" className="bg-indigo-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-indigo-700 inline-block">{t('cart__goShop')}</Link>
+      <ShoppingBag size={48} className="mx-auto text-base-300 dark:text-base-700 mb-4" />
+      <h2 className="text-xl font-semibold text-base-900 dark:text-white mb-2">{t('cart__empty')}</h2>
+      <p className="text-base-500 dark:text-base-400 mb-8 text-sm">{t('cart__emptyTagline')}</p>
+      <Link to="/" className="bg-base-900 dark:bg-white text-white dark:text-base-900 px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-base-700 dark:hover:bg-base-200 inline-block transition-colors">{t('cart__goShop')}</Link>
     </div>
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link to="/" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1 mb-6"><ArrowLeft size={16} /> {t('cart__keepBuying')}</Link>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">{t('cart__title')} ({itemCount})</h1>
-      <div className="space-y-3">
+    <div className="max-w-3xl mx-auto px-4 py-10">
+      <Link to="/" className="text-base-500 hover:text-base-900 dark:hover:text-white flex items-center gap-1 mb-8 text-sm transition-colors"><ArrowLeft size={16} /> {t('cart__keepBuying')}</Link>
+      <h1 className="text-2xl font-semibold text-base-900 dark:text-white mb-8 tracking-tight">{t('cart__title')} <span className="text-base-400 font-normal">({itemCount})</span></h1>
+      <div className="space-y-4">
         {items.map(item => (
-          <div key={`${item.productId}-${item.size}`} className="bg-white dark:bg-gray-900 rounded-2xl p-4 flex items-center gap-4 border border-gray-100 dark:border-gray-800 shadow-sm">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-xl flex-shrink-0" />
+          <div key={`${item.productId}-${item.size}`} className="flex items-center gap-4 py-4 border-b border-base-100 dark:border-base-900">
+            <div className="w-14 h-14 bg-base-100 dark:bg-base-900 rounded-lg flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 dark:text-white truncate">{item.name}</h3>
-              <p className="text-sm text-gray-400">{t('cart__sizeLabel')}: {item.size}</p>
-              <p className="text-indigo-600 dark:text-indigo-400 font-bold">${item.price.toFixed(2)}</p>
+              <h3 className="font-medium text-base-900 dark:text-white text-sm">{item.name}</h3>
+              <p className="text-xs text-base-400">{t('cart__sizeLabel')}: {item.size}</p>
             </div>
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-2">
-              <button onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"><Minus size={14} /></button>
-              <span className="w-8 text-center font-semibold text-sm text-gray-900 dark:text-white">{item.quantity}</span>
-              <button onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"><Plus size={14} /></button>
+            <div className="flex items-center gap-2 border border-base-200 dark:border-base-800 rounded-lg px-1.5 py-1">
+              <button onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)} className="p-1 hover:bg-base-100 dark:hover:bg-base-900 rounded"><Minus size={12} /></button>
+              <span className="w-6 text-center font-medium text-xs text-base-900 dark:text-white">{item.quantity}</span>
+              <button onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)} className="p-1 hover:bg-base-100 dark:hover:bg-base-900 rounded"><Plus size={12} /></button>
             </div>
-            <button onClick={() => removeItem(item.productId, item.size)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={18} /></button>
+            <span className="text-sm font-semibold text-base-900 dark:text-white w-16 text-right">${(item.price * item.quantity).toFixed(2)}</span>
+            <button onClick={() => removeItem(item.productId, item.size)} className="p-1.5 text-base-400 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
           </div>
         ))}
       </div>
-      <div className="mt-8 bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
-        <div className="flex justify-between text-lg mb-2 text-gray-900 dark:text-white"><span>{t('cart__subtotal')}</span><span>${total.toFixed(2)}</span></div>
-        <div className="flex justify-between text-lg mb-4"><span className="text-gray-400">{t('cart__shipping')}</span><span className="text-green-600">{t('cart__shippingCalc')}</span></div>
-        <div className="border-t dark:border-gray-700 pt-4 flex justify-between text-2xl font-bold text-gray-900 dark:text-white"><span>{t('cart__total')}</span><span>${total.toFixed(2)}</span></div>
+      <div className="mt-8 pt-6 border-t border-base-200 dark:border-base-800">
+        <div className="flex justify-between text-sm mb-2 text-base-500"><span>{t('cart__subtotal')}</span><span className="text-base-900 dark:text-white">${total.toFixed(2)}</span></div>
+        <div className="flex justify-between text-sm mb-4"><span>{t('cart__shipping')}</span><span className="text-green-600">{t('cart__shippingCalc')}</span></div>
+        <div className="flex justify-between text-lg font-semibold text-base-900 dark:text-white"><span>{t('cart__total')}</span><span>${total.toFixed(2)}</span></div>
       </div>
-      <button onClick={() => isAuthenticated ? navigate('/checkout') : navigate('/login')} className="mt-6 w-full bg-indigo-600 text-white py-4 rounded-2xl font-semibold text-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
+      <button onClick={() => isAuthenticated ? navigate('/checkout') : navigate('/login')} className="mt-6 w-full bg-base-900 dark:bg-white text-white dark:text-base-900 py-3.5 rounded-lg font-medium hover:bg-base-700 dark:hover:bg-base-200 transition-colors">
         {t('cart__checkout')}
       </button>
     </div>

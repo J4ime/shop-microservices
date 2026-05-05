@@ -30,34 +30,24 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <div onClick={() => navigate(`/product/${product.id}`)}
-      className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-md dark:hover:shadow-gray-900/50 transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-100 dark:border-gray-800">
-      <div className="h-64 relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+      className="group cursor-pointer overflow-hidden border border-base-200 dark:border-base-800 rounded-xl bg-white dark:bg-base-950 hover:border-base-300 dark:hover:border-base-700 transition-colors">
+      <div className="h-56 relative overflow-hidden bg-base-100 dark:bg-base-900">
         <img src={img} alt={product.name} loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-        <div className="absolute bottom-3 left-3">
-          <span className="text-xs font-medium bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">{product.categoryName || t('productCard__category')}</span>
-        </div>
+          className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
         {product.totalStock <= 10 && product.totalStock > 0 && (
-          <div className="absolute top-3 right-3 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full">{t('productCard__lastUnits')}</div>
+          <div className="absolute top-3 left-3 bg-base-900 dark:bg-white text-white dark:text-base-900 text-[10px] font-semibold px-2 py-1 rounded uppercase tracking-wide">{t('productCard__lastUnits')}</div>
         )}
       </div>
       <div className="p-4">
-        <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wide">{product.brand || 'UrbanStyle'}</p>
-        <h3 className="font-semibold text-gray-900 dark:text-white mt-1 truncate">{product.name}</h3>
+        <p className="text-[11px] text-base-400 font-medium uppercase tracking-wider">{product.brand || 'UrbanStyle'}</p>
+        <h3 className="font-medium text-base-900 dark:text-white mt-1 text-sm leading-snug">{product.name}</h3>
         <div className="flex items-center justify-between mt-3">
-          <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">${product.price.toFixed(2)}</span>
+          <span className="text-base font-semibold text-base-900 dark:text-white">${product.price.toFixed(2)}</span>
           <button onClick={(e) => { e.stopPropagation(); navigate(`/product/${product.id}`); }}
-            className="flex items-center gap-1 bg-indigo-600 text-white px-3 py-1.5 rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors">
-            <ShoppingCart size={14} /> {t('product__buy')}
+            className="flex items-center gap-1 bg-base-900 dark:bg-white text-white dark:text-base-900 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-base-700 dark:hover:bg-base-200 transition-colors">
+            <ShoppingCart size={13} /> {t('product__buy')}
           </button>
         </div>
-        {product.sizes && product.sizes.length > 0 && (
-          <div className="flex gap-1 mt-3">
-            {product.sizes.slice(0, 4).map(s => (
-              <span key={s.size} className="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-1.5 py-0.5 rounded font-medium">{s.size}</span>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

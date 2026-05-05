@@ -5,36 +5,22 @@ export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-gray-900 dark:bg-black text-gray-300 mt-20">
-      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">U</span>
-            </div>
-            <span className="text-lg font-bold text-white">UrbanStyle</span>
+    <footer className="border-t border-base-200 dark:border-base-800 bg-white dark:bg-base-950 mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold tracking-tight text-base-900 dark:text-white">UrbanStyle</span>
+            <span className="text-xs text-base-400">{t('footer__desc')}</span>
           </div>
-          <p className="text-sm text-gray-400">{t('footer__desc')}</p>
+          <div className="flex items-center gap-6 text-sm text-base-500">
+            <Link to="/" className="hover:text-base-900 dark:hover:text-white transition-colors">{t('footer__store')}</Link>
+            <Link to="/login" className="hover:text-base-900 dark:hover:text-white transition-colors">{t('footer__account')}</Link>
+            <Link to="/cart" className="hover:text-base-900 dark:hover:text-white transition-colors">{t('footer__cart')}</Link>
+          </div>
         </div>
-        <div>
-          <h4 className="text-white font-semibold mb-4">{t('footer__links')}</h4>
-          <ul className="space-y-2 text-sm">
-            <li><Link to="/" className="hover:text-white transition-colors">{t('footer__store')}</Link></li>
-            <li><Link to="/login" className="hover:text-white transition-colors">{t('footer__account')}</Link></li>
-            <li><Link to="/cart" className="hover:text-white transition-colors">{t('footer__cart')}</Link></li>
-          </ul>
+        <div className="mt-6 pt-4 border-t border-base-100 dark:border-base-900 text-center text-xs text-base-400">
+          {t('footer__rights')}
         </div>
-        <div>
-          <h4 className="text-white font-semibold mb-4">{t('footer__contact')}</h4>
-          <ul className="space-y-2 text-sm">
-            <li>contacto@urbanstyle.com</li>
-            <li>+52 55 1234 5678</li>
-            <li>CDMX, México</li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-gray-800 py-4 text-center text-sm text-gray-500">
-        {t('footer__rights')}
       </div>
     </footer>
   );

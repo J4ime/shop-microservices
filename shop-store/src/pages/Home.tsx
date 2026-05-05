@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { productsApi, categoriesApi } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { useTranslation } from '../i18n';
-import { Filter, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -28,36 +28,41 @@ export default function Home() {
   const resultsText = t(resultsKey).replace('{{count}}', String(filtered.length));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 mb-8 text-white">
-        <h1 className="text-3xl md:text-5xl font-bold mb-3">{t('home__hero')}</h1>
-        <p className="text-indigo-100 text-lg mb-6 max-w-lg">{t('home__heroDesc')}</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mb-12">
+        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-base-900 dark:text-white mb-3">{t('home__hero')}</h1>
+        <p className="text-base-500 dark:text-base-400 text-lg max-w-md">{t('home__heroDesc')}</p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <Search size={18} className="absolute left-3 top-3 text-gray-400" />
+      <div className="flex flex-col sm:flex-row gap-4 mb-8 items-start">
+        <div className="relative flex-1 max-w-sm">
+          <Search size={16} className="absolute left-3 top-3 text-base-400" />
           <input type="text" placeholder={t('home__search')} value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
-          {search && <button onClick={() => setSearch('')} className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><X size={16} /></button>}
+            className="w-full pl-9 pr-8 py-2.5 border border-base-200 dark:border-base-800 rounded-lg text-sm bg-white dark:bg-base-950 text-base-900 dark:text-white outline-none focus:border-base-400 transition-colors" />
+          {search && <button onClick={() => setSearch('')} className="absolute right-3 top-2.5 text-base-400 hover:text-base-600"><X size={14} /></button>}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Filter size={14} className="text-gray-400" />
-          <button onClick={() => setSelectedCategory('')} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${!selectedCategory ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>{t('home__all')}</button>
+          <button onClick={() => setSelectedCategory('')} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${!selectedCategory ? 'bg-base-900 dark:bg-white text-white dark:text-base-900 border-base-900 dark:border-white' : 'bg-white dark:bg-base-950 text-base-500 border-base-200 dark:border-base-800 hover:border-base-300 dark:hover:border-base-700'}`}>{t('home__all')}</button>
           {categories.map(cat => (
-            <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === cat.id ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>{cat.name}</button>
+            <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${selectedCategory === cat.id ? 'bg-base-900 dark:bg-white text-white dark:text-base-900 border-base-900 dark:border-white' : 'bg-white dark:bg-base-950 text-base-500 border-base-200 dark:border-base-800 hover:border-base-300 dark:hover:border-base-700'}`}>{cat.name}</button>
           ))}
         </div>
       </div>
-      <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">{resultsText}</p>
+      <p className="text-xs text-base-400 mb-6">{resultsText}</p>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1,2,3,4,5,6,7,8].map(i => (<div key={i} className="bg-white dark:bg-gray-900 rounded-2xl p-4 animate-pulse"><div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl mb-4" /><div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-3/4 mb-2" /><div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/2" /></div>))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[1,2,3,4,5,6,7,8].map(i => (
+            <div key={i} className="border border-base-200 dark:border-base-800 rounded-xl p-3 animate-pulse">
+              <div className="h-48 bg-base-100 dark:bg-base-900 rounded-lg mb-3" />
+              <div className="h-3 bg-base-100 dark:bg-base-900 rounded w-2/3 mb-2" />
+              <div className="h-4 bg-base-100 dark:bg-base-900 rounded w-1/3" />
+            </div>
+          ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {filtered.map(product => <ProductCard key={product.id} product={product} />)}
         </div>
       )}

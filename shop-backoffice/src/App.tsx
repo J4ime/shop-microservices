@@ -20,7 +20,7 @@ export default function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <Toaster position="top-right" toastOptions={{ style: { borderRadius: '12px', padding: '12px 16px' } }} />
+          <Toaster position="top-right" toastOptions={{ style: { borderRadius: '8px', padding: '10px 14px', fontSize: '13px' } }} />
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>

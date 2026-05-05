@@ -22,31 +22,28 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-base-50 dark:bg-base-950 px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">U</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white">{t('login__title')}</h1>
-          <p className="text-gray-400 mt-1">{t('login__subtitle')}</p>
+        <div className="text-center mb-10">
+          <h1 className="text-2xl font-semibold text-base-900 dark:text-white tracking-tight">{t('login__title')}</h1>
+          <p className="text-base-500 dark:text-base-400 mt-2 text-sm">{t('login__subtitle')}</p>
         </div>
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-2xl p-6 space-y-4 shadow-xl">
-          <div className="relative"><Mail size={18} className="absolute left-3 top-3.5 text-gray-500" />
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-base-950 border border-base-200 dark:border-base-800 rounded-xl p-6 space-y-4">
+          <div className="relative"><Mail size={16} className="absolute left-3 top-3.5 text-base-400" />
             <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder={t('login__email')} />
+              className="w-full pl-10 pr-4 py-3 bg-transparent border border-base-200 dark:border-base-800 rounded-lg text-base-900 dark:text-white text-sm focus:border-base-400 outline-none transition-colors placeholder-base-400" placeholder={t('login__email')} />
           </div>
-          <div className="relative"><Lock size={18} className="absolute left-3 top-3.5 text-gray-500" />
+          <div className="relative"><Lock size={16} className="absolute left-3 top-3.5 text-base-400" />
             <input type={showPw ? 'text' : 'password'} required value={password} onChange={e => setPassword(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder={t('login__password')} />
-            <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-3.5 text-gray-500">{showPw ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+              className="w-full pl-10 pr-10 py-3 bg-transparent border border-base-200 dark:border-base-800 rounded-lg text-base-900 dark:text-white text-sm focus:border-base-400 outline-none transition-colors" placeholder={t('login__password')} />
+            <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-3.5 text-base-400">{showPw ? <EyeOff size={16} /> : <Eye size={16} />}</button>
           </div>
           <button type="submit" disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-all">
+            className="w-full bg-base-900 dark:bg-white text-white dark:text-base-900 py-3 rounded-lg font-medium hover:bg-base-700 dark:hover:bg-base-200 disabled:opacity-50 transition-colors">
             {loading ? t('login__signingIn') : t('login__signIn')}
           </button>
         </form>
-        <p className="text-center text-xs text-gray-500 mt-4">admin@shop.com / Test1234!</p>
+        <p className="text-center text-xs text-base-400 mt-4">admin@shop.com / Test1234!</p>
       </div>
     </div>
   );

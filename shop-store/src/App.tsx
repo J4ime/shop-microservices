@@ -20,8 +20,8 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <CartProvider>
-            <Toaster position="top-right" toastOptions={{ style: { borderRadius: '12px', padding: '12px 16px' } }} />
-            <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
+            <Toaster position="top-right" toastOptions={{ style: { borderRadius: '8px', padding: '10px 14px', fontSize: '13px' } }} />
+            <div className="min-h-screen flex flex-col bg-base-50 dark:bg-base-950 text-base-900 dark:text-base-100 transition-colors">
               <Navbar />
               <main className="flex-1">
                 <Routes>
