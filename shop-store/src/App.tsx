@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 import { I18nextProvider } from './i18n';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { logger } from './services/logger';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -14,6 +16,10 @@ import Orders from './pages/Orders';
 import Login from './pages/Login';
 
 export default function App() {
+  useEffect(() => {
+    logger.info('Store app started');
+  }, []);
+
   return (
     <BrowserRouter>
       <I18nextProvider>

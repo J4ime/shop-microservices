@@ -2,6 +2,8 @@
 
 > Plataforma de e-commerce completa con arquitectura de microservicios, Clean Architecture, **.NET 10**, PostgreSQL, React 19 + Tailwind CSS 4, Docker y CI/CD.
 
+> 📖 **Agentes / Developers:** Consulta [`AGENTS.md`](AGENTS.md) para convenciones de código, comandos de build, guía de logging, decisiones arquitectónicas y solución de problemas comunes.
+
 ---
 
 ## 📋 Tabla de contenidos
@@ -97,6 +99,8 @@ shop-microservices/
 
 Todos los logs — APIs, base de datos (EF Core SQL), y frontend — se consolidan en Seq con búsqueda y filtros en tiempo real.
 
+> **Nota técnica:** El `SeqHttpSink` custom en los backends usa `StringContent` + `PostAsync(...).GetAwaiter().GetResult()` en lugar de `PostAsJsonAsync`, ya que .NET 10 preview genera chunked encoding que Seq rechaza con 400 Bad Request. Ver [`AGENTS.md`](AGENTS.md) para más detalles.
+
 ---
 
 ## 🌐 Multi-idioma
@@ -151,7 +155,9 @@ jmeter -n -t jmeter/shop-regression-test.jmx -l results.jtl
 
 ## 🔄 CI/CD
 
-GitHub Actions ejecuta automáticamente en cada push/PR a `main`:
+GitHub Actions ejecuta automáticamente en cada push/PR a `main`. Commits en formato [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `style:`, `refactor:`, `test:`, `docs:`.
+
+| Job | Descripción |
 
 | Job | Descripción |
 |-----|-------------|

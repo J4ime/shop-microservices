@@ -134,8 +134,11 @@ public sealed class SeqHttpSink(string seqUrl) : ILogEventSink
                     }
                 }
             };
-            _client.PostAsJsonAsync($"{seqUrl}/api/events/raw", body);
+            var json = System.Text.Json.JsonSerializer.Serialize(body);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            _client.PostAsync($"{seqUrl}/api/events/raw", content)
+                   .ConfigureAwait(false).GetAwaiter().GetResult();
         }
-        catch { }
+        catch (Exception ex) { Console.WriteLine($"[SeqHttpSink Error] {ex.Message}"); }
     }
 }

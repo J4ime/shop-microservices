@@ -22,7 +22,7 @@ function flush() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ Events: events }),
-  }).catch(() => {});
+  }).catch((err) => { console.warn('[SeqLogger] Failed to send logs', err); });
 }
 
 function enqueue(level: LogLevel, messageTemplate: string, properties?: Record<string, unknown>) {
