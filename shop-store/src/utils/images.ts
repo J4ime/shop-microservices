@@ -3,12 +3,15 @@ export interface ProductImageData {
   name: string;
   description?: string;
   imageUrl?: string;
+  hasImage?: boolean;
   brand?: string;
   color?: string;
   material?: string;
   categoryName?: string;
   gender?: string;
 }
+
+const API_BASE = 'http://localhost:5000';
 
 // Map Spanish colors to English for better LoremFlickr results
 const colorMap: Record<string, string> = {
@@ -41,6 +44,12 @@ function normalizeText(text?: string): string {
 }
 
 export function getProductImageUrl(product: ProductImageData, width = 600, height = 750): string {
+  // If the backend has an uploaded image, serve it directly from the API
+  if (product.hasImage) {
+    return `${API_BASE}/api/products/${product.id}/image`;
+  }
+
+  // Fallback to legacy ImageUrl if set
   if (product.imageUrl) return product.imageUrl;
 
   // Build deterministic seed from product id so the same product always gets the same image
@@ -54,7 +63,6 @@ export function getProductImageUrl(product: ProductImageData, width = 600, heigh
   const colorEn = colorMap[product.color || ''] || normalizeText(product.color);
   const catKeywords = categoryKeywords[product.categoryName || ''] || 'fashion,clothing';
 
-  // Combine keywords: category + color + extra terms for variety
   const extra = product.material
     ? normalizeText(product.material).replace(/sintetico/, 'synthetic')
     : '';

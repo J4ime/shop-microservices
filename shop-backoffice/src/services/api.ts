@@ -56,6 +56,14 @@ export const productsApi = {
   update: (id: string, data: object) => api.put(`/products/${id}`, data),
   delete: (id: string) => api.delete(`/products/${id}`),
   getLowStock: (threshold?: number) => api.get('/products/low-stock', { params: { threshold } }),
+  uploadImage: (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(`/products/${id}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  deleteImage: (id: string) => api.delete(`/products/${id}/image`),
 };
 
 export const categoriesApi = {

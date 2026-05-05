@@ -15,6 +15,7 @@ public class Product : BaseEntity
     public string? Material { get; set; }
     public string? Color { get; set; }
     public string? ImageUrl { get; set; }
+    public byte[]? ImageData { get; set; }
     public Gender Gender { get; set; }
     public Guid CategoryId { get; set; }
     public Category Category { get; set; } = null!;

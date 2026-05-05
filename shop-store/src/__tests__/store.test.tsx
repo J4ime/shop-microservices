@@ -78,6 +78,11 @@ describe('Image URL generation', () => {
     expect(getProductImageUrl({ id: '1', name: 'Test', imageUrl: 'https://example.com/img.jpg' })).toBe('https://example.com/img.jpg');
   });
 
+  it('returns backend image URL when hasImage is true', () => {
+    const url = getProductImageUrl({ id: 'abc123', name: 'Camiseta', hasImage: true });
+    expect(url).toContain('/api/products/abc123/image');
+  });
+
   it('generates loremflickr URL with category and color keywords', () => {
     const url = getProductImageUrl({ id: 'abc123', name: 'Camiseta Algodón', categoryName: 'Camisetas', color: 'Roja' });
     expect(url).toContain('loremflickr.com');

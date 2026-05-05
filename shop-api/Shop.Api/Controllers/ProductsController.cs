@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.DTOs;
 using Shop.Application.Features.Products;
+using Shop.Domain.Interfaces;
 
 namespace Shop.Api.Controllers;
 
@@ -11,8 +12,13 @@ namespace Shop.Api.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IProductRepository _repo;
 
-    public ProductsController(IMediator mediator) => _mediator = mediator;
+    public ProductsController(IMediator mediator, IProductRepository repo)
+    {
+        _mediator = mediator;
+        _repo = repo;
+    }
 
     [HttpGet]
     [AllowAnonymous]
@@ -29,6 +35,17 @@ public class ProductsController : ControllerBase
     {
         var result = await _mediator.Send(new GetProductByIdQuery(id));
         return Ok(new { success = true, data = result });
+    }
+
+    [HttpGet("{id:guid}/image")]
+    [AllowAnonymous]
+    [ResponseCache(Duration = 86400)]
+    public async Task<IActionResult> GetImage(Guid id)
+    {
+        var product = await _repo.GetByIdAsync(id);
+        if (product?.ImageData == null || product.ImageData.Length == 0)
+            return NotFound();
+        return File(product.ImageData, "image/jpeg");
     }
 
     [HttpGet("low-stock")]
@@ -55,6 +72,24 @@ public class ProductsController : ControllerBase
     {
         var result = await _mediator.Send(new UpdateProductCommand(id, dto));
         return Ok(new { success = true, data = result });
+    }
+
+    [HttpPost("{id:guid}/image")]
+    [Authorize]
+    public async Task<IActionResult> UploadImage(Guid id, IFormFile file)
+    {
+        using var ms = new MemoryStream();
+        await file.CopyToAsync(ms);
+        await _mediator.Send(new UploadProductImageCommand(id, ms.ToArray()));
+        return Ok(new { success = true });
+    }
+
+    [HttpDelete("{id:guid}/image")]
+    [Authorize]
+    public async Task<IActionResult> DeleteImage(Guid id)
+    {
+        await _mediator.Send(new DeleteProductImageCommand(id));
+        return NoContent();
     }
 
     [HttpDelete("{id:guid}")]

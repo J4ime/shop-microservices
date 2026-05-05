@@ -20,6 +20,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.Material).HasMaxLength(100);
         builder.Property(x => x.Color).HasMaxLength(50);
         builder.Property(x => x.ImageUrl).HasMaxLength(2000);
+        builder.Property(x => x.ImageData).HasColumnType("bytea");
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
         builder.Property(x => x.Gender).HasConversion<string>().HasMaxLength(20);
         builder.HasOne(x => x.Category).WithMany(c => c.Products)

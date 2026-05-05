@@ -6,17 +6,19 @@ using Shop.Api.Controllers;
 using Shop.Application.DTOs;
 using Shop.Application.Features.Products;
 using Shop.Domain.Enums;
+using Shop.Domain.Interfaces;
 
 namespace Shop.UnitTests.Api.Controllers;
 
 public class ProductsControllerTests
 {
     private readonly Mock<IMediator> _mediatorMock = new();
+    private readonly Mock<IProductRepository> _repoMock = new();
     private readonly ProductsController _controller;
 
     public ProductsControllerTests()
     {
-        _controller = new ProductsController(_mediatorMock.Object);
+        _controller = new ProductsController(_mediatorMock.Object, _repoMock.Object);
     }
 
     [Fact]
@@ -24,7 +26,7 @@ public class ProductsControllerTests
     {
         var response = new PagedResponse<ProductResponse>(
             [new(Guid.NewGuid(), "P1", "D", "SKU1", 100, 50, 10,
-                 ProductStatus.Active, Gender.Unisex, null, null, null, null, Guid.NewGuid(), "Cat",
+                 ProductStatus.Active, Gender.Unisex, null, null, null, null, false, Guid.NewGuid(), "Cat",
                  [], DateTime.UtcNow, null)],
             1, 1, 10);
 
@@ -43,7 +45,7 @@ public class ProductsControllerTests
     {
         var product = new ProductResponse(
             Guid.NewGuid(), "Test", "Desc", "SKU", 100, 50, 10,
-            ProductStatus.Active, Gender.Unisex, null, null, null, null, Guid.NewGuid(), "Cat",
+            ProductStatus.Active, Gender.Unisex, null, null, null, null, false, Guid.NewGuid(), "Cat",
             [], DateTime.UtcNow, null);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetProductByIdQuery>(), It.IsAny<CancellationToken>()))
@@ -58,7 +60,7 @@ public class ProductsControllerTests
     {
         var response = new ProductResponse(
             Guid.NewGuid(), "New", "Desc", "SKU", 100, 50, 10,
-            ProductStatus.Active, Gender.Unisex, null, null, null, null, Guid.NewGuid(), "Cat",
+            ProductStatus.Active, Gender.Unisex, null, null, null, null, false, Guid.NewGuid(), "Cat",
             [], DateTime.UtcNow, null);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<CreateProductCommand>(), It.IsAny<CancellationToken>()))
